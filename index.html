@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SalesPulse - Visitor & Lead Management</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Official Supabase JS Client Bundle (handles CORS & sandboxes automatically) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f8fafc; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- TOP HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Brand -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-md shadow-indigo-100">
+            <i class="fa-solid fa-users-viewfinder text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight leading-none flex items-center gap-2">
+              SalesPulse <span class="text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded-full border border-indigo-200">Visitor CRM</span>
+            </h1>
+            <p class="text-[11px] text-slate-500 font-medium mt-0.5">Live Team Sync & Auto Follow-ups</p>
+          </div>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- Connection Status Button -->
+          <button id="btnSupabaseConfig" onclick="openConfigModal()" class="px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition flex items-center gap-2 shadow-sm">
+            <span id="cloudStatusDot" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            <span id="cloudStatusText" class="text-slate-700 font-medium hidden sm:inline">Connecting...</span>
+          </button>
+
+          <!-- Refresh Data -->
+          <button onclick="fetchCloudVisitors(false)" class="p-2 sm:px-3 sm:py-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition flex items-center gap-1.5" title="Sync now">
+            <i class="fa-solid fa-arrows-rotate text-sm" id="syncSpinner"></i>
+            <span class="hidden md:inline">Sync</span>
+          </button>
+
+          <!-- Export CSV -->
+          <button onclick="exportCSV()" class="hidden md:inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-sm transition">
+            <i class="fa-solid fa-file-arrow-down text-sm"></i>
+            <span>Export CSV</span>
+          </button>
+
+          <!-- Notification Toggle -->
+          <button onclick="requestNotificationAccess()" class="p-2 sm:px-3 sm:py-2 text-xs font-semibold rounded-lg border border-slate-200 hover:bg-slate-100 text-slate-600 transition flex items-center gap-1.5" title="Enable browser alerts">
+            <i class="fa-regular fa-bell text-sm" id="bellIcon"></i>
+          </button>
+
+          <!-- Log Visitor Button -->
+          <button onclick="openModal()" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm shadow-indigo-200 active:scale-95 transition">
+            <i class="fa-solid fa-user-plus text-xs"></i>
+            <span>Log Visitor</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-5 space-y-5">
+
+    <!-- OVERDUE & DUE TODAY ALERT BANNER -->
+    <div id="urgentAlertBanner" class="hidden rounded-xl border border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-4 shadow-sm">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-500 text-white shrink-0 flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-amber-900" id="bannerTitle">Action Required on Follow-ups</h4>
+            <p class="text-xs text-amber-700 font-medium" id="bannerSubtitle">You have active client follow-ups due today or overdue.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button onclick="quickFilter('dueToday')" class="flex-1 sm:flex-none text-xs font-bold px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm">
+            Show Today's Due
+          </button>
+          <button onclick="quickFilter('overdue')" class="flex-1 sm:flex-none text-xs font-bold px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition shadow-sm">
+            Show Overdue
+          </button>
+          <button onclick="document.getElementById('urgentAlertBanner').classList.add('hidden')" class="text-amber-700 hover:bg-amber-200/60 p-1.5 rounded-lg transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- METRICS SUMMARY CARDS -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Visitors</p>
+          <h3 id="statTotal" class="text-2xl font-extrabold text-slate-900 mt-1">0</h3>
+          <span class="text-[11px] text-slate-400 font-medium">Logged in register</span>
+        </div>
+        <div class="w-11 h-11 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-users"></i>
+        </div>
+      </div>
+
+      <div onclick="quickFilter('dueToday')" class="bg-white p-4 rounded-xl border border-amber-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-amber-400 transition group">
+        <div>
+          <p class="text-xs font-semibold text-amber-700 uppercase tracking-wider flex items-center gap-1.5">
+            Due Today
+            <span class="w-2 h-2 rounded-full bg-amber-500 inline-block animate-ping"></span>
+          </p>
+          <h3 id="statDueToday" class="text-2xl font-extrabold text-amber-900 mt-1">0</h3>
+          <span class="text-[11px] text-amber-600 font-medium group-hover:underline">Click to filter &rarr;</span>
+        </div>
+        <div class="w-11 h-11 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-calendar-day"></i>
+        </div>
+      </div>
+
+      <div onclick="quickFilter('overdue')" class="bg-white p-4 rounded-xl border border-rose-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-rose-400 transition group">
+        <div>
+          <p class="text-xs font-semibold text-rose-700 uppercase tracking-wider">Overdue Leads</p>
+          <h3 id="statOverdue" class="text-2xl font-extrabold text-rose-800 mt-1">0</h3>
+          <span class="text-[11px] text-rose-600 font-medium group-hover:underline">Needs follow-up &rarr;</span>
+        </div>
+        <div class="w-11 h-11 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+      </div>
+
+      <div onclick="quickFilterStatus('Converted')" class="bg-white p-4 rounded-xl border border-emerald-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-400 transition group">
+        <div>
+          <p class="text-xs font-semibold text-emerald-700 uppercase tracking-wider">Converted Won</p>
+          <h3 id="statConverted" class="text-2xl font-extrabold text-emerald-800 mt-1">0</h3>
+          <span class="text-[11px] text-emerald-600 font-medium group-hover:underline">Closed orders &rarr;</span>
+        </div>
+        <div class="w-11 h-11 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER & SEARCH TOOLBAR -->
+    <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <!-- Search bar -->
+        <div class="md:col-span-2 relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+          <input 
+            type="text" 
+            id="searchInput" 
+            oninput="renderApp()" 
+            placeholder="Search customer, phone, area, req, remarks..." 
+            class="w-full pl-10 pr-9 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
+          />
+          <button id="btnClearSearch" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Sales Rep Filter -->
+        <div>
+          <select id="filterRep" onchange="renderApp()" class="w-full text-xs py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700">
+            <option value="">All Sales Persons</option>
+          </select>
+        </div>
+
+        <!-- Lead Status Filter -->
+        <div>
+          <select id="filterStatus" onchange="renderApp()" class="w-full text-xs py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700">
+            <option value="">All Lead Statuses</option>
+            <option value="Hot">🔥 Hot Lead</option>
+            <option value="Warm">☀️ Warm</option>
+            <option value="Cold">❄️ Cold</option>
+            <option value="Converted">✅ Converted / Won</option>
+            <option value="Lost">❌ Lost</option>
+          </select>
+        </div>
+
+        <!-- Follow-up Time Horizon Filter -->
+        <div>
+          <select id="filterTime" onchange="renderApp()" class="w-full text-xs py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 font-medium text-slate-700">
+            <option value="">All Follow-up Dates</option>
+            <option value="dueToday">🔔 Due Today</option>
+            <option value="overdue">⚠️ Overdue</option>
+            <option value="upcoming">📅 Upcoming (Next 7 Days)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Quick Reset bar -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+        <div class="flex items-center gap-1.5 text-slate-500">
+          <span>Active filter results:</span>
+          <span id="filteredCountBadge" class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded-full border border-indigo-200">0</span>
+        </div>
+        <button onclick="resetFilters()" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
+          <i class="fa-solid fa-rotate-left"></i> Reset Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW TOGGLE & LIST HEADER -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <h3 class="text-base font-bold text-slate-900">Visitor Records</h3>
+      </div>
+      <div class="flex items-center bg-slate-200/80 p-0.5 rounded-lg text-xs font-semibold">
+        <button id="viewBtnCards" onclick="setView('cards')" class="px-3 py-1.5 rounded-md transition bg-white text-slate-900 shadow-sm flex items-center gap-1.5">
+          <i class="fa-solid fa-grip"></i>
+          <span>Cards</span>
+        </button>
+        <button id="viewBtnTable" onclick="setView('table')" class="px-3 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+          <i class="fa-solid fa-table-list"></i>
+          <span>Table</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN RECORDS CONTAINER -->
+    <div id="contentContainer"></div>
+
+  </main>
+
+  <!-- MODAL: ADD / EDIT VISITOR -->
+  <div id="leadModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 my-8 overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
+        <div>
+          <h3 id="modalTitle" class="text-base font-bold text-slate-900">Log New Visitor</h3>
+          <p class="text-xs text-slate-500 font-medium">Record visitor needs & assign follow-up schedule</p>
+        </div>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Form -->
+      <form id="leadForm" onsubmit="saveLead(event)" class="p-6 space-y-4">
+        <input type="hidden" id="leadId" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              Visit Date <span class="text-rose-500">*</span>
+            </label>
+            <input type="date" id="visitDate" required class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              Sales Person Name <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="salesPerson" required placeholder="e.g. Ramesh Mohanty" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              Customer / Company Name <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="customerName" required placeholder="Full Name or Business" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              Contact Phone (10 digits)
+            </label>
+            <input type="tel" id="customerPhone" placeholder="e.g. 9876543210" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Area / Locality</label>
+            <input type="text" id="area" placeholder="e.g. Jaydev Vihar, Patia" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Lead Status</label>
+            <select id="status" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
+              <option value="Hot">🔥 Hot Lead</option>
+              <option value="Warm" selected>☀️ Warm</option>
+              <option value="Cold">❄️ Cold</option>
+              <option value="Converted">✅ Converted / Won</option>
+              <option value="Lost">❌ Lost</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">
+            Requirement Details <span class="text-rose-500">*</span>
+          </label>
+          <textarea id="requirement" required rows="2" placeholder="List item specifics, dimensions, quantities, budget, or model specs..." class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="p-3 bg-slate-100/70 border border-slate-200 rounded-xl space-y-2">
+          <div class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <i class="fa-solid fa-clock-rotate-left text-slate-500"></i>
+            <span>Previous / Last Follow-up Record (Optional)</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Last Follow-up Date</label>
+              <input type="date" id="lastFollowUpDate" class="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] font-semibold text-slate-600 mb-1">Last Follow-up Remarks</label>
+              <input type="text" id="lastFollowUpRemarks" placeholder="Summary of previous call or site visit..." class="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl space-y-2">
+          <div class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+            <i class="fa-regular fa-bell"></i>
+            <span>Next Follow-up Reminder Schedule</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[11px] font-semibold text-amber-800 mb-1">Next Follow-up Date</label>
+              <input type="date" id="followUpDate" class="w-full text-xs px-3 py-2 bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-amber-800 mb-1">Next Follow-up Time</label>
+              <input type="time" id="followUpTime" class="w-full text-xs px-3 py-2 bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">General Remarks & Meeting Notes</label>
+          <textarea id="remarks" rows="2" placeholder="e.g. Catalog shared. Promised to confirm order post site measurement." class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 border border-slate-300 text-slate-600 rounded-lg text-sm font-semibold hover:bg-slate-100 transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold shadow-sm shadow-indigo-200 transition">
+            Save Visitor Log
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: QUICK TOUCHPOINT / LOG FOLLOW-UP -->
+  <div id="quickFollowUpModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 my-8 overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 bg-indigo-50/70 border-b border-indigo-100">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Record Follow-up Call / Visit</h3>
+          <p id="quickModalCustomerName" class="text-xs text-indigo-700 font-semibold"></p>
+        </div>
+        <button onclick="closeQuickFollowUpModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="quickFollowUpForm" onsubmit="saveQuickFollowUp(event)" class="p-6 space-y-4">
+        <input type="hidden" id="quickLeadId" />
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">
+            Follow-up Discussion & Outcome <span class="text-rose-500">*</span>
+          </label>
+          <textarea id="quickDiscussionRemarks" required rows="3" placeholder="What was discussed? Did they ask for discounts, samples, or delay?" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"></textarea>
+          <p class="text-[11px] text-slate-400 mt-1">This will be archived as the <strong>Last Follow-up Remarks</strong>.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Update Status</label>
+          <select id="quickStatus" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none font-medium">
+            <option value="Hot">🔥 Hot Lead</option>
+            <option value="Warm">☀️ Warm</option>
+            <option value="Cold">❄️ Cold</option>
+            <option value="Converted">✅ Converted / Won</option>
+            <option value="Lost">❌ Lost</option>
+          </select>
+        </div>
+
+        <div class="p-3 bg-amber-50/80 border border-amber-200 rounded-xl space-y-2">
+          <label class="block text-xs font-bold text-amber-900">Next Follow-up Reminder</label>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <input type="date" id="quickNextDate" class="w-full text-xs px-2.5 py-1.5 bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500" />
+            </div>
+            <div>
+              <input type="time" id="quickNextTime" class="w-full text-xs px-2.5 py-1.5 bg-white border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500" />
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
+          <button type="button" onclick="closeQuickFollowUpModal()" class="px-4 py-2 border border-slate-300 text-slate-600 rounded-lg text-xs font-semibold hover:bg-slate-100 transition">
+            Cancel
+          </button>
+          <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition">
+            Save & Update Schedule
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: SUPABASE SETTINGS & DIAGNOSTICS -->
+  <div id="configModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 my-8 overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-b border-slate-200">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-600 flex items-center justify-center font-bold">
+            <i class="fa-solid fa-database"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Supabase Cloud Database Settings</h3>
+            <p class="text-xs text-slate-500">Official Supabase-JS SDK Connection</p>
+          </div>
+        </div>
+        <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <!-- Diagnostic Box -->
+        <div id="diagnosticResultBox" class="hidden p-3.5 rounded-xl border text-xs flex items-start gap-2.5">
+          <i id="diagIcon" class="fa-solid fa-circle-notch fa-spin text-sm mt-0.5"></i>
+          <div class="flex-1">
+            <strong id="diagTitle" class="block font-bold">Testing connection...</strong>
+            <span id="diagMessage" class="text-[11px] block mt-0.5 break-all"></span>
+          </div>
+        </div>
+
+        <form id="configForm" onsubmit="saveSupabaseConfig(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Supabase Project URL</label>
+            <input type="url" id="cfgUrl" required class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Supabase Anon Public Key</label>
+            <input type="text" id="cfgKey" required class="w-full text-xs px-3 py-2 border border-slate-300 rounded-lg font-mono focus:ring-2 focus:ring-indigo-500 focus:outline-none" />
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-2.5 pt-2 border-t border-slate-100">
+            <button type="button" onclick="disconnectSupabase()" class="text-xs text-rose-600 hover:text-rose-800 font-semibold order-3 sm:order-1">
+              Reset to Local Storage
+            </button>
+            <div class="flex items-center gap-2 w-full sm:w-auto order-1 sm:order-2">
+              <button type="button" id="btnTestConn" onclick="runSupabaseDiagnostics()" class="flex-1 sm:flex-none px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition">
+                <i class="fa-solid fa-stethoscope"></i>
+                <span>Test Connection</span>
+              </button>
+              <button type="submit" class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shadow-sm transition flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>Save & Connect</span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="pt-3 border-t border-slate-200">
+          <p class="text-[11px] text-slate-500">Connected to table <code class="bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-mono">visitors</code> with official SDK client.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION MESSAGE -->
+  <div id="toastMessage" class="hidden fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs font-medium px-4 py-3 rounded-xl shadow-xl flex items-center gap-2">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastText">Record saved</span>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // CREDENTIALS PRE-CONFIGURED
+    const DEFAULT_CONFIG = {
+      url: "https://adsczhoqmnxvjxgbqvq.supabase.co",
+      key: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkc2N6aG9xam1ueHZqeGdicXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNTMyNzUsImV4cCI6MjEwODgyOTI3NX0.DhEJ1tV1O2EJCHt0EL8402CwNRq1UXUkHnqITh4xDkM"
+    };
+
+    const STORAGE_KEY = 'sales_visitor_leads_cache';
+    const CONFIG_KEY = 'sales_supabase_credentials';
+
+    let supabaseClient = null;
+    let currentView = 'cards';
+    let isCloudConnected = false;
+    let syncInterval = null;
+    let leadsData = [];
+
+    // Helper: sanitize URL
+    function sanitizeUrl(rawUrl) {
+      if (!rawUrl) return '';
+      let url = rawUrl.trim();
+      url = url.replace(/\/rest\/v[0-9]*\/?$/i, '');
+      url = url.replace(/\/+$/, '');
+      return url;
+    }
+
+    // Helper: sanitize Anon Key (force lowercase 'e' in eyJ...)
+    function sanitizeKey(rawKey) {
+      if (!rawKey) return '';
+      let key = rawKey.trim();
+      if (key.startsWith('EyJ')) {
+        key = 'e' + key.slice(1);
+      }
+      return key;
+    }
+
+    // Helper: Toast alert
+    function showToast(msg) {
+      const t = document.getElementById('toastMessage');
+      document.getElementById('toastText').innerText = msg;
+      t.classList.remove('hidden');
+      setTimeout(() => t.classList.add('hidden'), 3500);
+    }
+
+    // Helper: Connection Badge
+    function setConnectionBadge(status, label) {
+      const dot = document.getElementById('cloudStatusDot');
+      const text = document.getElementById('cloudStatusText');
+      if (status === 'connected') {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-200";
+        text.innerText = label || "Cloud Connected";
+        text.className = "text-emerald-700 font-bold hidden sm:inline";
+      } else if (status === 'connecting') {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-indigo-500 animate-ping";
+        text.innerText = label || "Connecting...";
+        text.className = "text-indigo-700 font-medium hidden sm:inline";
+      } else {
+        dot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
+        text.innerText = label || "Local Mode";
+        text.className = "text-amber-700 font-medium hidden sm:inline";
+      }
+    }
+
+    // Create Supabase Client using official SDK
+    function createClientInstance(url, key) {
+      if (typeof supabase === 'undefined' || !supabase.createClient) {
+        console.warn('Supabase JS library not loaded yet');
+        return null;
+      }
+      return supabase.createClient(sanitizeUrl(url), sanitizeKey(key), {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        }
+      });
+    }
+
+    // Diagnostics Probe
+    async function runSupabaseDiagnostics() {
+      const urlInput = sanitizeUrl(document.getElementById('cfgUrl').value);
+      const keyInput = sanitizeKey(document.getElementById('cfgKey').value);
+
+      const diagBox = document.getElementById('diagnosticResultBox');
+      const diagIcon = document.getElementById('diagIcon');
+      const diagTitle = document.getElementById('diagTitle');
+      const diagMsg = document.getElementById('diagMessage');
+
+      diagBox.className = "p-3.5 rounded-xl border text-xs flex items-start gap-2.5 bg-blue-50 border-blue-200 text-blue-900";
+      diagIcon.className = "fa-solid fa-circle-notch fa-spin text-sm mt-0.5 text-blue-600";
+      diagTitle.innerText = "Testing Connection with Supabase SDK...";
+      diagMsg.innerText = `Connecting to ${urlInput}...`;
+      diagBox.classList.remove('hidden');
+
+      try {
+        const client = createClientInstance(urlInput, keyInput);
+        if (!client) throw new Error("Supabase JS SDK could not be initialized.");
+
+        const { data, error, status } = await client
+          .from('visitors')
+          .select('id')
+          .limit(1);
+
+        if (error) {
+          diagBox.className = "p-3.5 rounded-xl border text-xs flex items-start gap-2.5 bg-rose-50 border-rose-200 text-rose-900";
+          diagIcon.className = "fa-solid fa-circle-xmark text-sm mt-0.5 text-rose-600";
+          diagTitle.innerText = `Supabase Error (${status || 'Unknown'})`;
+          diagMsg.innerText = error.message || JSON.stringify(error);
+        } else {
+          diagBox.className = "p-3.5 rounded-xl border text-xs flex items-start gap-2.5 bg-emerald-50 border-emerald-200 text-emerald-900";
+          diagIcon.className = "fa-solid fa-circle-check text-sm mt-0.5 text-emerald-600";
+          diagTitle.innerText = `Connection Successful!`;
+          diagMsg.innerText = `Table 'visitors' reached cleanly via official SDK. Found ${data ? data.length : 0} sample row(s).`;
+        }
+      } catch (err) {
+        diagBox.className = "p-3.5 rounded-xl border text-xs flex items-start gap-2.5 bg-rose-50 border-rose-200 text-rose-900";
+        diagIcon.className = "fa-solid fa-triangle-exclamation text-sm mt-0.5 text-rose-600";
+        diagTitle.innerText = "Network / Client Error";
+        diagMsg.innerText = err.message || "Failed to contact database endpoint.";
+      }
+    }
+
+    // Init connection on startup
+    async function initConnection() {
+      let saved = localStorage.getItem(CONFIG_KEY);
+      if (!saved) {
+        localStorage.setItem(CONFIG_KEY, JSON.stringify(DEFAULT_CONFIG));
+        saved = JSON.stringify(DEFAULT_CONFIG);
+      }
+
+      try {
+        const parsed = JSON.parse(saved);
+        const url = sanitizeUrl(parsed.url || DEFAULT_CONFIG.url);
+        const key = sanitizeKey(parsed.key || DEFAULT_CONFIG.key);
+
+        supabaseClient = createClientInstance(url, key);
+        setConnectionBadge('connecting', 'Connecting...');
+        await fetchCloudVisitors(true);
+
+        if (syncInterval) clearInterval(syncInterval);
+        syncInterval = setInterval(() => {
+          if (supabaseClient) fetchCloudVisitors(true);
+        }, 15000);
+
+      } catch (e) {
+        console.error('Init failure:', e);
+        setConnectionBadge('offline', 'Local Mode');
+        loadLocalLeads();
+      }
+    }
+
+    // Fetch leads from Supabase via SDK
+    async function fetchCloudVisitors(silent = false) {
+      if (!supabaseClient) {
+        loadLocalLeads();
+        return;
+      }
+
+      const spinner = document.getElementById('syncSpinner');
+      if (spinner) spinner.classList.add('fa-spin');
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('visitors')
+          .select('*')
+          .order('visit_date', { ascending: false });
+
+        if (error) throw error;
+
+        leadsData = (data || []).map(r => ({
+          id: r.id,
+          visit_date: r.visit_date,
+          sales_person: r.sales_person,
+          customer_name: r.customer_name,
+          customer_phone: r.customer_phone,
+          area: r.area,
+          status: r.status,
+          requirement: r.requirement,
+          last_followup_date: r.last_follow_up_date,
+          last_followup_remarks: r.last_follow_up_remarks,
+          next_followup_date: r.follow_up_date,
+          next_followup_time: r.follow_up_time,
+          remarks: r.remarks
+        }));
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(leadsData));
+        isCloudConnected = true;
+        setConnectionBadge('connected', 'Cloud Connected');
+        if (!silent) showToast('Synchronized with Cloud');
+        renderApp();
+      } catch (err) {
+        console.warn('Sync issue, reverting to local cache:', err);
+        isCloudConnected = false;
+        setConnectionBadge('offline', 'Local Mode');
+        loadLocalLeads();
+      } finally {
+        if (spinner) spinner.classList.remove('fa-spin');
+      }
+    }
+
+    // Fallback: Local Cache
+    function loadLocalLeads() {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        try {
+          leadsData = JSON.parse(stored);
+        } catch (e) {
+          leadsData = [];
+        }
+      }
+      renderApp();
+    }
+
+    // Save lead (Create / Update)
+    async function saveLead(e) {
+      e.preventDefault();
+      const id = document.getElementById('leadId').value || 'lead_' + Date.now();
+
+      const payload = {
+        id: id,
+        visit_date: document.getElementById('visitDate').value,
+        sales_person: document.getElementById('salesPerson').value.trim(),
+        customer_name: document.getElementById('customerName').value.trim(),
+        customer_phone: document.getElementById('customerPhone').value.trim() || null,
+        area: document.getElementById('area').value.trim() || null,
+        status: document.getElementById('status').value,
+        requirement: document.getElementById('requirement').value.trim(),
+        last_follow_up_date: document.getElementById('lastFollowUpDate').value || null,
+        last_follow_up_remarks: document.getElementById('lastFollowUpRemarks').value.trim() || null,
+        follow_up_date: document.getElementById('followUpDate').value || null,
+        follow_up_time: document.getElementById('followUpTime').value || null,
+        remarks: document.getElementById('remarks').value.trim() || null
+      };
+
+      if (isCloudConnected && supabaseClient) {
+        try {
+          const { error } = await supabaseClient
+            .from('visitors')
+            .upsert(payload);
+
+          if (error) throw error;
+          showToast('Saved & Synced to Cloud!');
+          await fetchCloudVisitors(true);
+        } catch (err) {
+          console.error(err);
+          saveLeadLocal(id, payload);
+          showToast('Cloud write failed; saved locally.');
+        }
+      } else {
+        saveLeadLocal(id, payload);
+        showToast('Saved locally.');
+      }
+
+      closeModal();
+    }
+
+    function saveLeadLocal(id, payload) {
+      const formatted = {
+        id: id,
+        visit_date: payload.visit_date,
+        sales_person: payload.sales_person,
+        customer_name: payload.customer_name,
+        customer_phone: payload.customer_phone,
+        area: payload.area,
+        status: payload.status,
+        requirement: payload.requirement,
+        last_followup_date: payload.last_follow_up_date,
+        last_followup_remarks: payload.last_follow_up_remarks,
+        next_followup_date: payload.follow_up_date,
+        next_followup_time: payload.follow_up_time,
+        remarks: payload.remarks
+      };
+
+      const idx = leadsData.findIndex(l => l.id === id);
+      if (idx !== -1) leadsData[idx] = formatted;
+      else leadsData.unshift(formatted);
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(leadsData));
+      renderApp();
+    }
+
+    // Save Quick Follow-up Touchpoint
+    async function saveQuickFollowUp(e) {
+      e.preventDefault();
+      const leadId = document.getElementById('quickLeadId').value;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const outcomeText = document.getElementById('quickDiscussionRemarks').value.trim();
+      const newStatus = document.getElementById('quickStatus').value;
+      const nextDate = document.getElementById('quickNextDate').value || null;
+      const nextTime = document.getElementById('quickNextTime').value || null;
+
+      const updates = {
+        last_follow_up_date: todayStr,
+        last_follow_up_remarks: outcomeText,
+        status: newStatus,
+        follow_up_date: nextDate,
+        follow_up_time: nextTime
+      };
+
+      if (isCloudConnected && supabaseClient) {
+        try {
+          const { error } = await supabaseClient
+            .from('visitors')
+            .update(updates)
+            .eq('id', leadId);
+
+          if (error) throw error;
+          showToast('Follow-up recorded & synced!');
+          await fetchCloudVisitors(true);
+        } catch (err) {
+          console.error(err);
+          applyQuickUpdateLocal(leadId, updates);
+        }
+      } else {
+        applyQuickUpdateLocal(leadId, updates);
+      }
+
+      closeQuickFollowUpModal();
+    }
+
+    function applyQuickUpdateLocal(leadId, updates) {
+      const idx = leadsData.findIndex(l => l.id === leadId);
+      if (idx !== -1) {
+        leadsData[idx].last_followup_date = updates.last_follow_up_date;
+        leadsData[idx].last_followup_remarks = updates.last_follow_up_remarks;
+        leadsData[idx].status = updates.status;
+        leadsData[idx].next_followup_date = updates.follow_up_date;
+        leadsData[idx].next_followup_time = updates.follow_up_time;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(leadsData));
+        renderApp();
+        showToast('Follow-up saved locally');
+      }
+    }
+
+    // Delete Visitor
+    async function deleteLead(id) {
+      if (!window.confirm('Delete this visitor record permanently?')) return;
+
+      if (isCloudConnected && supabaseClient) {
+        try {
+          const { error } = await supabaseClient
+            .from('visitors')
+            .delete()
+            .eq('id', id);
+
+          if (error) throw error;
+          showToast('Deleted from Supabase');
+          await fetchCloudVisitors(true);
+        } catch (err) {
+          console.error(err);
+          leadsData = leadsData.filter(l => l.id !== id);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(leadsData));
+          renderApp();
+        }
+      } else {
+        leadsData = leadsData.filter(l => l.id !== id);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(leadsData));
+        renderApp();
+        showToast('Deleted locally');
+      }
+    }
+
+    // Modal controls
+    function openModal(editId = null) {
+      const form = document.getElementById('leadForm');
+      form.reset();
+      document.getElementById('leadId').value = '';
+      document.getElementById('visitDate').value = new Date().toISOString().split('T')[0];
+
+      if (editId) {
+        document.getElementById('modalTitle').innerText = 'Edit Visitor Record';
+        const lead = leadsData.find(l => l.id === editId);
+        if (lead) {
+          document.getElementById('leadId').value = lead.id;
+          document.getElementById('visitDate').value = lead.visit_date || '';
+          document.getElementById('salesPerson').value = lead.sales_person || '';
+          document.getElementById('customerName').value = lead.customer_name || '';
+          document.getElementById('customerPhone').value = lead.customer_phone || '';
+          document.getElementById('area').value = lead.area || '';
+          document.getElementById('status').value = lead.status || 'Warm';
+          document.getElementById('requirement').value = lead.requirement || '';
+          document.getElementById('lastFollowUpDate').value = lead.last_followup_date || '';
+          document.getElementById('lastFollowUpRemarks').value = lead.last_followup_remarks || '';
+          document.getElementById('followUpDate').value = lead.next_followup_date || '';
+          document.getElementById('followUpTime').value = lead.next_followup_time || '';
+          document.getElementById('remarks').value = lead.remarks || '';
+        }
+      } else {
+        document.getElementById('modalTitle').innerText = 'Log New Visitor';
+      }
+      document.getElementById('leadModal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('leadModal').classList.add('hidden');
+    }
+
+    function openQuickFollowUpModal(id) {
+      const lead = leadsData.find(l => l.id === id);
+      if (!lead) return;
+      document.getElementById('quickLeadId').value = lead.id;
+      document.getElementById('quickModalCustomerName').innerText = `${lead.customer_name} (${lead.sales_person})`;
+      document.getElementById('quickDiscussionRemarks').value = '';
+      document.getElementById('quickStatus').value = lead.status || 'Warm';
+
+      const d = new Date();
+      d.setDate(d.getDate() + 2);
+      document.getElementById('quickNextDate').value = d.toISOString().split('T')[0];
+      document.getElementById('quickNextTime').value = '11:00';
+
+      document.getElementById('quickFollowUpModal').classList.remove('hidden');
+    }
+
+    function closeQuickFollowUpModal() {
+      document.getElementById('quickFollowUpModal').classList.add('hidden');
+    }
+
+    function openConfigModal() {
+      const saved = localStorage.getItem(CONFIG_KEY);
+      if (saved) {
+        try {
+          const { url, key } = JSON.parse(saved);
+          document.getElementById('cfgUrl').value = url || DEFAULT_CONFIG.url;
+          document.getElementById('cfgKey').value = key || DEFAULT_CONFIG.key;
+        } catch(e) {}
+      } else {
+        document.getElementById('cfgUrl').value = DEFAULT_CONFIG.url;
+        document.getElementById('cfgKey').value = DEFAULT_CONFIG.key;
+      }
+      document.getElementById('diagnosticResultBox').classList.add('hidden');
+      document.getElementById('configModal').classList.remove('hidden');
+    }
+
+    function closeConfigModal() {
+      document.getElementById('configModal').classList.add('hidden');
+    }
+
+    function saveSupabaseConfig(e) {
+      e.preventDefault();
+      const url = sanitizeUrl(document.getElementById('cfgUrl').value);
+      const key = sanitizeKey(document.getElementById('cfgKey').value);
+
+      localStorage.setItem(CONFIG_KEY, JSON.stringify({ url, key }));
+      supabaseClient = createClientInstance(url, key);
+      closeConfigModal();
+      showToast('Reconnecting to Supabase...');
+      fetchCloudVisitors(false);
+    }
+
+    function disconnectSupabase() {
+      localStorage.removeItem(CONFIG_KEY);
+      supabaseClient = null;
+      if (syncInterval) clearInterval(syncInterval);
+      setConnectionBadge('offline', 'Local Mode');
+      closeConfigModal();
+      showToast('Switched to Local Storage');
+      loadLocalLeads();
+    }
+
+    // View switching
+    function setView(view) {
+      currentView = view;
+      document.getElementById('viewBtnCards').className = view === 'cards' 
+        ? 'px-3 py-1.5 rounded-md transition bg-white text-slate-900 shadow-sm flex items-center gap-1.5' 
+        : 'px-3 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+      document.getElementById('viewBtnTable').className = view === 'table' 
+        ? 'px-3 py-1.5 rounded-md transition bg-white text-slate-900 shadow-sm flex items-center gap-1.5' 
+        : 'px-3 py-1.5 rounded-md transition text-slate-600 hover:text-slate-900 flex items-center gap-1.5';
+      renderApp();
+    }
+
+    // Filter helpers
+    function quickFilter(type) {
+      document.getElementById('filterTime').value = type;
+      renderApp();
+    }
+
+    function quickFilterStatus(status) {
+      document.getElementById('filterStatus').value = status;
+      renderApp();
+    }
+
+    function resetFilters() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('filterRep').value = '';
+      document.getElementById('filterStatus').value = '';
+      document.getElementById('filterTime').value = '';
+      document.getElementById('btnClearSearch').classList.add('hidden');
+      renderApp();
+    }
+
+    function clearSearch() {
+      document.getElementById('searchInput').value = '';
+      document.getElementById('btnClearSearch').classList.add('hidden');
+      renderApp();
+    }
+
+    function getStatusBadge(status) {
+      switch(status) {
+        case 'Hot': return '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">🔥 Hot Lead</span>';
+        case 'Warm': return '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">☀️ Warm</span>';
+        case 'Cold': return '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-700 border border-sky-200">❄️ Cold</span>';
+        case 'Converted': return '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">✅ Converted</span>';
+        case 'Lost': return '<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200">❌ Lost</span>';
+        default: return `<span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700">${status}</span>`;
+      }
+    }
+
+    // Notification request
+    function requestNotificationAccess() {
+      if (!("Notification" in window)) {
+        alert("Desktop notifications not supported in this browser.");
+        return;
+      }
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          document.getElementById('bellIcon').className = "fa-solid fa-bell text-sm text-indigo-600";
+          showToast("Follow-up notifications enabled!");
+        }
+      });
+    }
+
+    // CSV Export
+    function exportCSV() {
+      if (!leadsData.length) return alert('No visitor leads available to export.');
+
+      const headers = [
+        "Visit Date", "Sales Person", "Customer Name", "Phone", "Area", "Status",
+        "Requirement", "Last Follow Up Date", "Last Follow Up Remarks",
+        "Next Follow Up Date", "Next Follow Up Time", "General Remarks"
+      ];
+
+      const rows = leadsData.map(l => [
+        `"${l.visit_date || ''}"`,
+        `"${(l.sales_person || '').replace(/"/g, '""')}"`,
+        `"${(l.customer_name || '').replace(/"/g, '""')}"`,
+        `"${l.customer_phone || ''}"`,
+        `"${(l.area || '').replace(/"/g, '""')}"`,
+        `"${l.status || ''}"`,
+        `"${(l.requirement || '').replace(/"/g, '""')}"`,
+        `"${l.last_followup_date || ''}"`,
+        `"${(l.last_followup_remarks || '').replace(/"/g, '""')}"`,
+        `"${l.next_followup_date || ''}"`,
+        `"${l.next_followup_time || ''}"`,
+        `"${(l.remarks || '').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `visitor_leads_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Render list
+    function renderApp() {
+      const today = new Date().toISOString().split('T')[0];
+
+      const repSelect = document.getElementById('filterRep');
+      const activeRep = repSelect.value;
+      const allReps = Array.from(new Set(leadsData.map(l => l.sales_person).filter(Boolean)));
+      repSelect.innerHTML = '<option value="">All Sales Persons</option>' + 
+        allReps.map(r => `<option value="${r}" ${r === activeRep ? 'selected' : ''}>${r}</option>`).join('');
+
+      const dueToday = leadsData.filter(l => l.next_followup_date === today && l.status !== 'Converted' && l.status !== 'Lost');
+      const overdue = leadsData.filter(l => l.next_followup_date && l.next_followup_date < today && l.status !== 'Converted' && l.status !== 'Lost');
+      const converted = leadsData.filter(l => l.status === 'Converted');
+
+      document.getElementById('statTotal').innerText = leadsData.length;
+      document.getElementById('statDueToday').innerText = dueToday.length;
+      document.getElementById('statOverdue').innerText = overdue.length;
+      document.getElementById('statConverted').innerText = converted.length;
+
+      const alertBanner = document.getElementById('urgentAlertBanner');
+      if (dueToday.length > 0 || overdue.length > 0) {
+        alertBanner.classList.remove('hidden');
+        document.getElementById('bannerTitle').innerText = `${overdue.length} Overdue & ${dueToday.length} Due Today!`;
+        document.getElementById('bannerSubtitle').innerText = "Please prioritize client touchpoints immediately to ensure leads are not lost.";
+      } else {
+        alertBanner.classList.add('hidden');
+      }
+
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (q) document.getElementById('btnClearSearch').classList.remove('hidden');
+      else document.getElementById('btnClearSearch').classList.add('hidden');
+
+      const repFilter = document.getElementById('filterRep').value;
+      const statusFilter = document.getElementById('filterStatus').value;
+      const timeFilter = document.getElementById('filterTime').value;
+
+      const filtered = leadsData.filter(l => {
+        const matchesQuery = 
+          (l.customer_name || '').toLowerCase().includes(q) ||
+          (l.sales_person || '').toLowerCase().includes(q) ||
+          (l.customer_phone || '').toLowerCase().includes(q) ||
+          (l.area || '').toLowerCase().includes(q) ||
+          (l.requirement || '').toLowerCase().includes(q) ||
+          (l.remarks || '').toLowerCase().includes(q);
+
+        const matchesRep = !repFilter || l.sales_person === repFilter;
+        const matchesStatus = !statusFilter || l.status === statusFilter;
+
+        let matchesTime = true;
+        if (timeFilter === 'dueToday') matchesTime = l.next_followup_date === today;
+        else if (timeFilter === 'overdue') matchesTime = l.next_followup_date && l.next_followup_date < today && l.status !== 'Converted';
+        else if (timeFilter === 'upcoming') {
+          const d = new Date(today);
+          d.setDate(d.getDate() + 7);
+          const maxDate = d.toISOString().split('T')[0];
+          matchesTime = l.next_followup_date >= today && l.next_followup_date <= maxDate;
+        }
+
+        return matchesQuery && matchesRep && matchesStatus && matchesTime;
+      });
+
+      document.getElementById('filteredCountBadge').innerText = filtered.length;
+      const container = document.getElementById('contentContainer');
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-xl p-12 text-center border border-slate-200">
+            <i class="fa-regular fa-folder-open text-4xl text-slate-300 mb-3"></i>
+            <h4 class="text-slate-700 font-bold text-sm">No visitor records found</h4>
+            <p class="text-xs text-slate-400 mt-1">Try resetting your filters or click "+ Log Visitor" to add a new record.</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentView === 'cards') {
+        container.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            ${filtered.map(l => {
+              const isToday = l.next_followup_date === today;
+              const isOverdue = l.next_followup_date && l.next_followup_date < today && l.status !== 'Converted';
+
+              const phoneBtn = l.customer_phone ? `
+                <a href="tel:${l.customer_phone}" class="flex-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 py-1.5 rounded-lg text-xs font-semibold text-center flex items-center justify-center gap-1 transition">
+                  <i class="fa-solid fa-phone"></i> Call
+                </a>
+                <a href="https://wa.me/91${l.customer_phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(`Hello ${l.customer_name}, following up regarding your requirement: ${l.requirement}`)}" target="_blank" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 py-1.5 rounded-lg text-xs font-semibold text-center flex items-center justify-center gap-1 transition">
+                  <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                </a>
+              ` : '';
+
+              return `
+                <div class="bg-white rounded-2xl shadow-sm border ${isToday ? 'border-amber-400 ring-2 ring-amber-100' : (isOverdue ? 'border-rose-300 ring-1 ring-rose-100' : 'border-slate-200')} p-4 flex flex-col justify-between hover:shadow-md transition">
+                  <div>
+                    <div class="flex justify-between items-start gap-2 mb-2">
+                      <div>
+                        <h4 class="font-bold text-slate-900 text-base leading-snug">${l.customer_name}</h4>
+                        <div class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
+                          <span><i class="fa-solid fa-location-dot text-slate-400"></i> ${l.area || 'No Area'}</span>
+                          <span>•</span>
+                          <span>${l.visit_date}</span>
+                        </div>
+                      </div>
+                      <div>${getStatusBadge(l.status)}</div>
+                    </div>
+
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 my-2">
+                      <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Requirement</div>
+                      <p class="text-xs text-slate-800 font-medium mt-0.5 line-clamp-3">${l.requirement}</p>
+                    </div>
+
+                    ${l.last_followup_date || l.last_followup_remarks ? `
+                      <div class="bg-indigo-50/40 p-2.5 rounded-xl border border-indigo-100/60 my-2 text-xs">
+                        <div class="flex items-center justify-between text-[11px] font-bold text-indigo-900 mb-0.5">
+                          <span class="flex items-center gap-1"><i class="fa-solid fa-clock-rotate-left text-indigo-500"></i> Last Follow-up:</span>
+                          <span class="font-mono text-slate-500">${l.last_followup_date || 'N/A'}</span>
+                        </div>
+                        <p class="text-[11px] text-slate-700 italic">${l.last_followup_remarks || 'No notes logged.'}</p>
+                      </div>
+                    ` : ''}
+
+                    ${l.remarks ? `
+                      <div class="text-xs text-slate-600 mb-2">
+                        <span class="font-bold text-slate-500">Remarks:</span> ${l.remarks}
+                      </div>
+                    ` : ''}
+
+                    <div class="flex items-center justify-between text-xs text-slate-600 mt-2 pt-2 border-t border-slate-100">
+                      <div><span class="font-bold text-slate-500">Rep:</span> ${l.sales_person}</div>
+                      <div>
+                        ${l.next_followup_date ? `
+                          <span class="font-bold px-2 py-0.5 rounded-md ${isToday ? 'bg-amber-100 text-amber-800 font-extrabold' : (isOverdue ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-700')}">
+                            <i class="fa-regular fa-clock mr-1"></i>${l.next_followup_date} ${l.next_followup_time || ''}
+                          </span>
+                        ` : '<span class="text-slate-400 italic text-[11px]">No next follow-up</span>'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mt-3">
+                    ${phoneBtn ? `<div class="flex items-center gap-2 mb-2">${phoneBtn}</div>` : ''}
+                    
+                    <button onclick="openQuickFollowUpModal('${l.id}')" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-1.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5 mb-2 shadow-sm">
+                      <i class="fa-solid fa-square-phone-flip text-xs"></i>
+                      <span>Log Follow-up / Touchpoint</span>
+                    </button>
+
+                    <div class="flex justify-end gap-3 pt-2 border-t border-slate-100 text-slate-400 text-xs">
+                      <button onclick="openModal('${l.id}')" class="hover:text-indigo-600 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                      </button>
+                      <button onclick="deleteLead('${l.id}')" class="hover:text-rose-600 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-trash"></i> Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                <tr>
+                  <th class="p-3.5">Visit Date</th>
+                  <th class="p-3.5">Customer & Phone</th>
+                  <th class="p-3.5">Sales Person</th>
+                  <th class="p-3.5">Area</th>
+                  <th class="p-3.5">Status</th>
+                  <th class="p-3.5">Requirement</th>
+                  <th class="p-3.5">Last Follow-up</th>
+                  <th class="p-3.5">Next Follow-up</th>
+                  <th class="p-3.5 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium">
+                ${filtered.map(l => `
+                  <tr class="hover:bg-slate-50/80 transition">
+                    <td class="p-3.5 whitespace-nowrap text-slate-500 font-mono">${l.visit_date}</td>
+                    <td class="p-3.5">
+                      <div class="font-bold text-slate-900 text-sm">${l.customer_name}</div>
+                      <div class="text-slate-400 text-[11px] font-mono">${l.customer_phone || '-'}</div>
+                    </td>
+                    <td class="p-3.5 whitespace-nowrap text-slate-700 font-semibold">${l.sales_person}</td>
+                    <td class="p-3.5 whitespace-nowrap text-slate-600">${l.area || '-'}</td>
+                    <td class="p-3.5 whitespace-nowrap">${getStatusBadge(l.status)}</td>
+                    <td class="p-3.5 max-w-xs truncate text-slate-700" title="${l.requirement}">${l.requirement}</td>
+                    <td class="p-3.5 max-w-xs">
+                      ${l.last_followup_date ? `
+                        <div class="text-[11px] font-bold text-slate-700">${l.last_followup_date}</div>
+                        <div class="text-[11px] text-slate-500 truncate" title="${l.last_followup_remarks || ''}">${l.last_followup_remarks || '-'}</div>
+                      ` : '<span class="text-slate-400">-</span>'}
+                    </td>
+                    <td class="p-3.5 whitespace-nowrap">
+                      ${l.next_followup_date ? `
+                        <span class="font-bold ${l.next_followup_date === today ? 'text-amber-600 font-extrabold' : (l.next_followup_date < today && l.status !== 'Converted' ? 'text-rose-600 font-extrabold' : 'text-slate-600')}">
+                          ${l.next_followup_date} ${l.next_followup_time || ''}
+                        </span>
+                      ` : '<span class="text-slate-400">-</span>'}
+                    </td>
+                    <td class="p-3.5 text-right whitespace-nowrap space-x-1">
+                      <button onclick="openQuickFollowUpModal('${l.id}')" title="Log Follow-up" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded text-[11px] font-bold">
+                        <i class="fa-solid fa-square-phone-flip"></i>
+                      </button>
+                      <button onclick="openModal('${l.id}')" title="Edit" class="p-1.5 text-indigo-600 hover:text-indigo-800">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </button>
+                      <button onclick="deleteLead('${l.id}')" title="Delete" class="p-1.5 text-rose-600 hover:text-rose-800">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+    }
+
+    // Auto-launch on window load
+    window.addEventListener('DOMContentLoaded', () => {
+      initConnection();
+    });
+  </script>
+</body>
+</html>
