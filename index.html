@@ -140,7 +140,7 @@
       </div>
 
       <!-- New Visitors This Week -->
-      <div onclick="setFilterQuick('newToday')" class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs hover:border-blue-300 cursor-pointer transition">
+      <div onclick="setFilterQuick('week')" class="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs hover:border-blue-300 cursor-pointer transition">
         <div class="flex items-center justify-between text-blue-600 mb-1">
           <span class="text-xs font-semibold uppercase tracking-wider">New This Week</span>
           <span class="text-base">✨</span>
@@ -412,7 +412,7 @@
 
   <!-- ================= MODAL: RECORD NEW VISITOR / EDIT LEAD ================= -->
   <!-- Designed specifically with max-height & sticky header/footer to prevent screen clipping/omission -->
-  <div id="leadModal" class="modal-overlay hidden">
+  <div id="leadModal" class="modal-overlay hidden" onclick="closeLeadModal()">
     <div class="modal-content-safe" onclick="event.stopPropagation()">
       
       <!-- Sticky Modal Header (Never cut off) -->
@@ -674,7 +674,7 @@
 
   <!-- ================= MODAL: LOG FOLLOW-UP / UPDATE INTERACTION ================= -->
   <!-- Opened when clicking "+ Follow-up" on any existing lead -->
-  <div id="followUpModal" class="modal-overlay hidden">
+  <div id="followUpModal" class="modal-overlay hidden" onclick="closeFollowUpModal()">
     <div class="modal-content-safe max-w-lg" onclick="event.stopPropagation()">
       
       <!-- Sticky Modal Header -->
@@ -811,7 +811,7 @@
   </div>
 
   <!-- ================= MODAL: VIEW FULL CUSTOMER PROFILE & TIMELINE ================= -->
-  <div id="viewDetailsModal" class="modal-overlay hidden">
+  <div id="viewDetailsModal" class="modal-overlay hidden" onclick="closeViewDetailsModal()">
     <div class="modal-content-safe max-w-2xl" onclick="event.stopPropagation()">
       
       <!-- Sticky Modal Header -->
