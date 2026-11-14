@@ -25,7 +25,92 @@
     }
   </script>
   
-  <link rel="stylesheet" href="styles.css">
+  <!-- Embedded CSS to guarantee zero missing file issues & bulletproof modal display -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    :root {
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Glass Panels */
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* CRITICAL: Overrides to prevent modal overlays from blocking page buttons */
+    .hidden {
+      display: none !important;
+    }
+
+    .modal-overlay.hidden {
+      display: none !important;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .modal-content-safe {
+      width: 100%;
+      max-width: 48rem;
+      max-height: calc(100vh - 2.5rem);
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border-radius: 1rem;
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+      overflow: hidden;
+      animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalPop {
+      0% {
+        opacity: 0;
+        transform: scale(0.96) translateY(8px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+  </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800 flex flex-col selection:bg-indigo-100 selection:text-indigo-800">
 
@@ -54,20 +139,20 @@
         <div class="flex items-center gap-2 sm:gap-3">
           
           <!-- Audio & Browser Notification Trigger -->
-          <button onclick="requestBrowserNotificationPermission()" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition" title="Enable follow-up sound chime and desktop alerts">
+          <button type="button" onclick="requestBrowserNotificationPermission()" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition cursor-pointer" title="Enable follow-up sound chime and desktop alerts">
             <span>🔊</span>
             <span>Alerts & Sound</span>
           </button>
 
           <!-- Export CSV -->
-          <button onclick="exportLeadsCSV()" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition flex items-center gap-1.5" title="Export current list to CSV">
+          <button type="button" onclick="exportLeadsCSV()" class="p-2 sm:px-3 sm:py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-xs transition flex items-center gap-1.5 cursor-pointer" title="Export current list to CSV">
             <span>📊</span>
             <span class="hidden sm:inline">Export CSV</span>
           </button>
 
           <!-- Notification Bell with Dropdown -->
           <div class="relative">
-            <button id="bellBtn" onclick="toggleNotificationDropdown()" class="relative p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-xs transition" title="View Follow-up Reminders">
+            <button type="button" id="bellBtn" onclick="toggleNotificationDropdown()" class="relative p-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-xs transition cursor-pointer" title="View Follow-up Reminders">
               <span class="text-base">🔔</span>
               <span id="bellBadge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center ring-2 ring-white">
                 0
@@ -75,10 +160,10 @@
             </button>
 
             <!-- Dropdown Menu -->
-            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden">
+            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-xl shadow-xl border border-slate-200 z-50 overflow-hidden" style="display: none;">
               <div class="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
                 <span class="font-bold text-xs uppercase tracking-wider text-slate-700">Follow-up Reminder Center</span>
-                <button onclick="playReminderChime()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold">Test Sound 🔊</button>
+                <button type="button" onclick="playReminderChime()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold cursor-pointer">Test Sound 🔊</button>
               </div>
               <div id="reminderListContainer" class="max-h-80 overflow-y-auto divide-y divide-slate-100">
                 <!-- Dynamically populated -->
@@ -87,7 +172,7 @@
           </div>
 
           <!-- + Record Visitor / Lead Button (Primary Action) -->
-          <button onclick="openNewVisitorModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-xs sm:text-sm shadow-md shadow-indigo-600/25 flex items-center gap-1.5 transition transform hover:-translate-y-0.5">
+          <button type="button" id="btnOpenNewLead" onclick="openNewVisitorModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold text-xs sm:text-sm shadow-md shadow-indigo-600/25 flex items-center gap-1.5 transition transform hover:-translate-y-0.5 cursor-pointer">
             <span class="text-base leading-none">+</span>
             <span>Record Visitor / Lead</span>
           </button>
@@ -102,7 +187,7 @@
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
     <!-- URGENT FOLLOW-UP REMINDER BANNER -->
-    <div id="reminderAlertBanner" class="hidden flex flex-col sm:flex-row gap-3">
+    <div id="reminderAlertBanner" class="hidden flex flex-col sm:flex-row gap-3" style="display: none;">
       <!-- Populated dynamically if there are follow-ups due today or overdue -->
     </div>
 
@@ -184,22 +269,22 @@
         <div class="flex items-center justify-between md:justify-end gap-2">
           
           <div class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
-            <button id="btnViewTable" onclick="switchView('table')" class="px-3 py-1.5 rounded-lg bg-white text-indigo-600 font-bold shadow-xs transition flex items-center gap-1.5">
+            <button type="button" id="btnViewTable" onclick="switchView('table')" class="px-3 py-1.5 rounded-lg bg-white text-indigo-600 font-bold shadow-xs transition flex items-center gap-1.5 cursor-pointer">
               <span>📑</span>
               <span>Table List</span>
             </button>
-            <button id="btnViewCards" onclick="switchView('cards')" class="px-3 py-1.5 rounded-lg text-slate-600 font-medium hover:text-slate-900 transition flex items-center gap-1.5">
+            <button type="button" id="btnViewCards" onclick="switchView('cards')" class="px-3 py-1.5 rounded-lg text-slate-600 font-medium hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
               <span>🗂️</span>
               <span>Cards</span>
             </button>
-            <button id="btnViewKanban" onclick="switchView('kanban')" class="px-3 py-1.5 rounded-lg text-slate-600 font-medium hover:text-slate-900 transition flex items-center gap-1.5">
+            <button type="button" id="btnViewKanban" onclick="switchView('kanban')" class="px-3 py-1.5 rounded-lg text-slate-600 font-medium hover:text-slate-900 transition flex items-center gap-1.5 cursor-pointer">
               <span>📊</span>
               <span>Pipeline</span>
             </button>
           </div>
 
           <!-- Reset Filter Button -->
-          <button onclick="resetFilters()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center gap-1" title="Clear all active filters">
+          <button type="button" onclick="resetFilters()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition flex items-center gap-1 cursor-pointer" title="Clear all active filters">
             <span>↺</span>
             <span class="hidden sm:inline">Reset</span>
           </button>
@@ -228,7 +313,7 @@
         <div>
           <div class="flex items-center justify-between mb-1">
             <label class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Sales Person</label>
-            <button onclick="promptAddSalesPerson()" class="text-[10px] text-indigo-600 hover:underline font-bold" title="Add new sales representative">+ Add</button>
+            <button type="button" onclick="promptAddSalesPerson()" class="text-[10px] text-indigo-600 hover:underline font-bold cursor-pointer" title="Add new sales representative">+ Add</button>
           </div>
           <select id="filterSalesPerson" class="w-full py-1.5 px-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:ring-1 focus:ring-indigo-500">
             <!-- Populated dynamically -->
@@ -239,7 +324,7 @@
         <div>
           <div class="flex items-center justify-between mb-1">
             <label class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Area / Territory</label>
-            <button onclick="promptAddArea()" class="text-[10px] text-indigo-600 hover:underline font-bold" title="Add new territory/area">+ Add</button>
+            <button type="button" onclick="promptAddArea()" class="text-[10px] text-indigo-600 hover:underline font-bold cursor-pointer" title="Add new territory/area">+ Add</button>
           </div>
           <select id="filterArea" class="w-full py-1.5 px-2.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:bg-white focus:ring-1 focus:ring-indigo-500">
             <!-- Populated dynamically -->
@@ -286,7 +371,7 @@
       </div>
 
       <!-- Custom Date Range Expandable (shown only if 'Custom Date Range...' selected) -->
-      <div id="customDateRangeContainer" class="hidden flex flex-wrap items-center gap-3 pt-2 bg-indigo-50/50 p-3 rounded-lg border border-indigo-100">
+      <div id="customDateRangeContainer" class="hidden flex flex-wrap items-center gap-3 pt-2 bg-indigo-50/50 p-3 rounded-lg border border-indigo-100" style="display: none;">
         <span class="text-xs font-bold text-indigo-900">Custom Date Range:</span>
         <div class="flex items-center gap-2">
           <label class="text-xs text-slate-600 font-medium">From:</label>
@@ -305,7 +390,7 @@
       <div id="resultsCount" class="font-semibold text-slate-700">Loading records...</div>
       <div class="flex items-center gap-3">
         <span class="hidden sm:inline text-slate-400">💡 Click column headers to sort table</span>
-        <button onclick="resetToSampleData()" class="text-xs text-slate-400 hover:text-indigo-600 underline">
+        <button type="button" onclick="resetToSampleData()" class="text-xs text-slate-400 hover:text-indigo-600 underline cursor-pointer">
           Load Sample Demo Data
         </button>
       </div>
@@ -387,7 +472,7 @@
 
           <!-- Table Body -->
           <tbody id="leadsTableBody" class="divide-y divide-slate-100 text-sm">
-            <!-- Dynamically populated by app.js -->
+            <!-- Dynamically populated by JavaScript -->
           </tbody>
 
         </table>
@@ -395,16 +480,16 @@
     </div>
 
     <!-- ================= 2. CARDS VIEW ================= -->
-    <div id="cardsViewContainer" class="hidden">
+    <div id="cardsViewContainer" class="hidden" style="display: none;">
       <div id="cardsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <!-- Dynamically populated by app.js -->
+        <!-- Dynamically populated by JavaScript -->
       </div>
     </div>
 
     <!-- ================= 3. KANBAN PIPELINE VIEW ================= -->
-    <div id="kanbanViewContainer" class="hidden overflow-x-auto pb-4">
+    <div id="kanbanViewContainer" class="hidden overflow-x-auto pb-4" style="display: none;">
       <div id="kanbanBoard" class="flex gap-4 min-w-max">
-        <!-- Dynamically populated by app.js -->
+        <!-- Dynamically populated by JavaScript -->
       </div>
     </div>
 
@@ -412,7 +497,7 @@
 
   <!-- ================= MODAL: RECORD NEW VISITOR / EDIT LEAD ================= -->
   <!-- Designed specifically with max-height & sticky header/footer to prevent screen clipping/omission -->
-  <div id="leadModal" class="modal-overlay hidden" onclick="closeLeadModal()">
+  <div id="leadModal" class="modal-overlay hidden" style="display: none;" onclick="closeLeadModal()">
     <div class="modal-content-safe" onclick="event.stopPropagation()">
       
       <!-- Sticky Modal Header (Never cut off) -->
@@ -426,7 +511,7 @@
             <p class="text-xs text-slate-500">Capture visitor inquiry, sales territory, and follow-up plan</p>
           </div>
         </div>
-        <button onclick="closeLeadModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center text-lg transition">
+        <button type="button" onclick="closeLeadModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center text-lg transition cursor-pointer">
           ✕
         </button>
       </div>
@@ -538,7 +623,7 @@
             <div>
               <div class="flex items-center justify-between mb-1">
                 <label class="text-xs font-bold text-slate-700">Sales Person *</label>
-                <button type="button" onclick="promptAddSalesPerson()" class="text-[10px] text-indigo-600 hover:underline font-bold">+ New Rep</button>
+                <button type="button" onclick="promptAddSalesPerson()" class="text-[10px] text-indigo-600 hover:underline font-bold cursor-pointer">+ New Rep</button>
               </div>
               <select id="formSalesPerson" required class="w-full text-xs py-2 px-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 <!-- Populated dynamically -->
@@ -549,7 +634,7 @@
             <div>
               <div class="flex items-center justify-between mb-1">
                 <label class="text-xs font-bold text-slate-700">Area / Location *</label>
-                <button type="button" onclick="promptAddArea()" class="text-[10px] text-indigo-600 hover:underline font-bold">+ New Area</button>
+                <button type="button" onclick="promptAddArea()" class="text-[10px] text-indigo-600 hover:underline font-bold cursor-pointer">+ New Area</button>
               </div>
               <select id="formArea" required class="w-full text-xs py-2 px-3 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
                 <!-- Populated dynamically -->
@@ -658,10 +743,10 @@
         <div class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex items-center justify-between z-10">
           <span class="text-xs text-slate-400">* Mandatory fields</span>
           <div class="flex items-center gap-2.5">
-            <button type="button" onclick="closeLeadModal()" class="px-4 py-2 border border-slate-300 bg-white hover:bg-slate-100 rounded-xl text-xs font-semibold text-slate-700 transition">
+            <button type="button" onclick="closeLeadModal()" class="px-4 py-2 border border-slate-300 bg-white hover:bg-slate-100 rounded-xl text-xs font-semibold text-slate-700 transition cursor-pointer">
               Cancel
             </button>
-            <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/20 transition">
+            <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/20 transition cursor-pointer">
               Save Visitor Record
             </button>
           </div>
@@ -674,7 +759,7 @@
 
   <!-- ================= MODAL: LOG FOLLOW-UP / UPDATE INTERACTION ================= -->
   <!-- Opened when clicking "+ Follow-up" on any existing lead -->
-  <div id="followUpModal" class="modal-overlay hidden" onclick="closeFollowUpModal()">
+  <div id="followUpModal" class="modal-overlay hidden" style="display: none;" onclick="closeFollowUpModal()">
     <div class="modal-content-safe max-w-lg" onclick="event.stopPropagation()">
       
       <!-- Sticky Modal Header -->
@@ -688,7 +773,7 @@
             <p id="fuCustomerNameDisplay" class="text-xs font-semibold text-indigo-600">Customer Name</p>
           </div>
         </div>
-        <button onclick="closeFollowUpModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center text-lg transition">
+        <button type="button" onclick="closeFollowUpModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center text-lg transition cursor-pointer">
           ✕
         </button>
       </div>
@@ -797,10 +882,10 @@
 
         <!-- Sticky Footer -->
         <div class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 py-3.5 flex items-center justify-end gap-2.5 z-10">
-          <button type="button" onclick="closeFollowUpModal()" class="px-4 py-2 border border-slate-300 bg-white hover:bg-slate-100 rounded-xl text-xs font-semibold text-slate-700 transition">
+          <button type="button" onclick="closeFollowUpModal()" class="px-4 py-2 border border-slate-300 bg-white hover:bg-slate-100 rounded-xl text-xs font-semibold text-slate-700 transition cursor-pointer">
             Cancel
           </button>
-          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/20 transition">
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-600/20 transition cursor-pointer">
             Save Follow-up & Schedule
           </button>
         </div>
@@ -811,7 +896,7 @@
   </div>
 
   <!-- ================= MODAL: VIEW FULL CUSTOMER PROFILE & TIMELINE ================= -->
-  <div id="viewDetailsModal" class="modal-overlay hidden" onclick="closeViewDetailsModal()">
+  <div id="viewDetailsModal" class="modal-overlay hidden" style="display: none;" onclick="closeViewDetailsModal()">
     <div class="modal-content-safe max-w-2xl" onclick="event.stopPropagation()">
       
       <!-- Sticky Modal Header -->
@@ -820,7 +905,7 @@
           <span class="text-lg">👤</span>
           <h3 class="text-base font-bold text-slate-900">Customer Profile & Interaction Log</h3>
         </div>
-        <button onclick="closeViewDetailsModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center text-lg transition">
+        <button type="button" onclick="closeViewDetailsModal()" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center text-lg transition cursor-pointer">
           ✕
         </button>
       </div>
@@ -832,7 +917,7 @@
 
       <!-- Sticky Footer -->
       <div class="sticky bottom-0 bg-slate-50 border-t border-slate-200 px-6 py-3 flex items-center justify-end z-10">
-        <button onclick="closeViewDetailsModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-xl text-xs font-semibold text-slate-700 transition">
+        <button type="button" onclick="closeViewDetailsModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 rounded-xl text-xs font-semibold text-slate-700 transition cursor-pointer">
           Close
         </button>
       </div>
@@ -840,10 +925,1951 @@
     </div>
   </div>
 
-  <!-- Toast Container -->
+  <!-- Toast Notification Container -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"></div>
 
-  <!-- Application Logic -->
-  <script src="app.js"></script>
+  <!-- ================= INLINE CORE CRM APPLICATION LOGIC ================= -->
+  <!-- Embedded directly so that this HTML file functions with 100% independence anywhere -->
+  <script>
+    // --- Global State ---
+    const STORAGE_KEY = 'leadflow_leads_v2';
+    const SETTINGS_KEY = 'leadflow_settings_v2';
+
+    const DEFAULT_SALES_PERSONS = [
+      'Alex Morgan',
+      'Sarah Jenkins',
+      'David Kumar',
+      'Emily Zhang',
+      'Michael Scott',
+      'Priya Sharma'
+    ];
+
+    const DEFAULT_AREAS = [
+      'Downtown Commercial Hub',
+      'North Tech Park',
+      'Cyber City East',
+      'West Industrial Zone',
+      'South Bay Plaza',
+      'Metro Central',
+      'Uptown Financial District'
+    ];
+
+    const STATUS_CONFIG = {
+      'New Visitor': { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', dot: 'bg-blue-500' },
+      'In Discussion': { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', dot: 'bg-purple-500' },
+      'Quotation Sent': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', dot: 'bg-amber-500' },
+      'Follow-up Pending': { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', dot: 'bg-orange-500' },
+      'Converted / Won': { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200', dot: 'bg-emerald-500' },
+      'Lost / Closed': { bg: 'bg-slate-100', text: 'text-slate-600', border: 'border-slate-300', dot: 'bg-slate-400' }
+    };
+
+    const PRIORITY_CONFIG = {
+      'High': { bg: 'bg-rose-50', text: 'text-rose-700', border: 'border-rose-200', icon: '🔥' },
+      'Medium': { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-200', icon: '⚡' },
+      'Low': { bg: 'bg-slate-50', text: 'text-slate-600', border: 'border-slate-200', icon: '☕' }
+    };
+
+    let leads = [];
+    let salesPersonsList = [...DEFAULT_SALES_PERSONS];
+    let areasList = [...DEFAULT_AREAS];
+
+    let filters = {
+      search: '',
+      dateRange: 'all',
+      customStartDate: '',
+      customEndDate: '',
+      salesPerson: 'all',
+      area: 'all',
+      followUpStatus: 'all',
+      status: 'all',
+      priority: 'all'
+    };
+
+    let currentView = 'table';
+    let sortColumn = 'date';
+    let sortDirection = 'desc';
+
+    function getTodayString() {
+      const d = new Date();
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function getYesterdayString() {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+
+    function getCurrentTimeString() {
+      const d = new Date();
+      return d.toTimeString().slice(0, 5);
+    }
+
+    function formatDateDisplay(dateStr) {
+      if (!dateStr) return '—';
+      try {
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+          const d = new Date(parts[0], parts[1] - 1, parts[2]);
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+        return dateStr;
+      } catch (e) {
+        return dateStr;
+      }
+    }
+
+    function generateInitialSampleData() {
+      const today = getTodayString();
+      const yesterday = getYesterdayString();
+      
+      const tomObj = new Date();
+      tomObj.setDate(tomObj.getDate() + 1);
+      const tomorrow = tomObj.toISOString().slice(0, 10);
+
+      const nextWeekObj = new Date();
+      nextWeekObj.setDate(nextWeekObj.getDate() + 4);
+      const nextWeek = nextWeekObj.toISOString().slice(0, 10);
+
+      const threeDaysAgoObj = new Date();
+      threeDaysAgoObj.setDate(threeDaysAgoObj.getDate() - 3);
+      const threeDaysAgo = threeDaysAgoObj.toISOString().slice(0, 10);
+
+      const fiveDaysAgoObj = new Date();
+      fiveDaysAgoObj.setDate(fiveDaysAgoObj.getDate() - 5);
+      const fiveDaysAgo = fiveDaysAgoObj.toISOString().slice(0, 10);
+
+      return [
+        {
+          id: 'lead-101',
+          date: today,
+          time: '10:15',
+          customerName: 'Robert Vance',
+          company: 'Vance Refrigeration Corp',
+          phone: '+1 (555) 234-8901',
+          email: 'robert@vancerefrig.com',
+          salesPerson: 'David Kumar',
+          area: 'North Tech Park',
+          requirementDetails: 'Requires 35 commercial cooling telemetry sensors and centralized dashboard software. Requested quick POC.',
+          requirementCategory: 'IoT Solutions',
+          priority: 'High',
+          status: 'Follow-up Pending',
+          nextFollowUpDate: today,
+          nextFollowUpTime: '15:30',
+          reminderEnabled: true,
+          lastFollowUpDate: yesterday,
+          lastFollowUpInfo: 'Sent standard catalog & pricing breakdown; client agreed to review and discuss implementation schedule today.',
+          followUpHistory: [
+            {
+              id: 'fh-1',
+              date: yesterday,
+              time: '14:00',
+              conductedBy: 'David Kumar',
+              type: 'Phone Call',
+              remarks: 'Sent standard catalog & pricing breakdown; client agreed to review and discuss implementation schedule today.',
+              newStatus: 'Follow-up Pending'
+            }
+          ],
+          createdAt: Date.now() - 86400000
+        },
+        {
+          id: 'lead-102',
+          date: today,
+          time: '11:45',
+          customerName: 'Aarav Mehta & Co.',
+          company: 'Skyline Architecture',
+          phone: '+1 (555) 678-1234',
+          email: 'aarav@skylinearch.io',
+          salesPerson: 'Sarah Jenkins',
+          area: 'Downtown Commercial Hub',
+          requirementDetails: 'First-time walk-in inquiry. Wants 3D rendering workstation setup and licensing for 12 CAD architects.',
+          requirementCategory: 'Hardware & CAD',
+          priority: 'Medium',
+          status: 'New Visitor',
+          nextFollowUpDate: tomorrow,
+          nextFollowUpTime: '11:00',
+          reminderEnabled: true,
+          lastFollowUpDate: null,
+          lastFollowUpInfo: '',
+          followUpHistory: [],
+          createdAt: Date.now() - 15000000
+        },
+        {
+          id: 'lead-103',
+          date: fiveDaysAgo,
+          time: '09:30',
+          customerName: 'Elena Rostova',
+          company: 'Apex Logistics Global',
+          phone: '+1 (555) 432-8765',
+          email: 'elena.r@apexlogistics.com',
+          salesPerson: 'Alex Morgan',
+          area: 'West Industrial Zone',
+          requirementDetails: 'Fleet tracking dispatch software with GPS geofencing & driver mobile app for 120 vehicles.',
+          requirementCategory: 'Enterprise Logistics',
+          priority: 'High',
+          status: 'Follow-up Pending',
+          nextFollowUpDate: yesterday,
+          nextFollowUpTime: '14:00',
+          reminderEnabled: true,
+          lastFollowUpDate: threeDaysAgo,
+          lastFollowUpInfo: 'Conducted live product walkthrough on Zoom. Chief Operations Officer attended. Needs formal price quote.',
+          followUpHistory: [
+            {
+              id: 'fh-2',
+              date: threeDaysAgo,
+              time: '16:30',
+              conductedBy: 'Alex Morgan',
+              type: 'Video Meeting',
+              remarks: 'Conducted live product walkthrough on Zoom. Chief Operations Officer attended. Needs formal price quote.',
+              newStatus: 'Follow-up Pending'
+            }
+          ],
+          createdAt: Date.now() - 400000000
+        },
+        {
+          id: 'lead-104',
+          date: yesterday,
+          time: '16:20',
+          customerName: 'Marcus Holloway',
+          company: 'DedSec Cybersecurity Labs',
+          phone: '+1 (555) 987-6543',
+          email: 'marcus@dedsec.net',
+          salesPerson: 'Emily Zhang',
+          area: 'Cyber City East',
+          requirementDetails: 'Walked into branch. Inquired about enterprise firewall appliances and managed threat intelligence feeds.',
+          requirementCategory: 'Cybersecurity',
+          priority: 'Low',
+          status: 'New Visitor',
+          nextFollowUpDate: nextWeek,
+          nextFollowUpTime: '10:00',
+          reminderEnabled: false,
+          lastFollowUpDate: null,
+          lastFollowUpInfo: '',
+          followUpHistory: [],
+          createdAt: Date.now() - 90000000
+        },
+        {
+          id: 'lead-105',
+          date: fiveDaysAgo,
+          time: '14:10',
+          customerName: 'Dr. Evelyn Reed',
+          company: 'St. Jude Healthcare Diagnostics',
+          phone: '+1 (555) 876-5432',
+          email: 'dr.reed@stjudediag.org',
+          salesPerson: 'Priya Sharma',
+          area: 'South Bay Plaza',
+          requirementDetails: 'Electronic health record synchronization and HIPAA-compliant patient messaging portal.',
+          requirementCategory: 'Healthcare IT',
+          priority: 'High',
+          status: 'Converted / Won',
+          nextFollowUpDate: null,
+          nextFollowUpTime: null,
+          reminderEnabled: false,
+          lastFollowUpDate: yesterday,
+          lastFollowUpInfo: 'Client signed the 2-year annual maintenance contract and issued purchase order #PO-9821. Onboarding started.',
+          followUpHistory: [
+            {
+              id: 'fh-3',
+              date: threeDaysAgo,
+              time: '11:00',
+              conductedBy: 'Priya Sharma',
+              type: 'In-person Meeting',
+              remarks: 'Delivered revised SLA terms and compliance documentation.',
+              newStatus: 'Quotation Sent'
+            },
+            {
+              id: 'fh-4',
+              date: yesterday,
+              time: '15:00',
+              conductedBy: 'Priya Sharma',
+              type: 'Phone Call',
+              remarks: 'Client signed the 2-year annual maintenance contract and issued purchase order #PO-9821. Onboarding started.',
+              newStatus: 'Converted / Won'
+            }
+          ],
+          createdAt: Date.now() - 450000000
+        }
+      ];
+    }
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          leads = JSON.parse(raw);
+        } else {
+          leads = generateInitialSampleData();
+          saveData();
+        }
+
+        const savedSettings = localStorage.getItem(SETTINGS_KEY);
+        if (savedSettings) {
+          const parsed = JSON.parse(savedSettings);
+          if (parsed.salesPersons) salesPersonsList = parsed.salesPersons;
+          if (parsed.areas) areasList = parsed.areas;
+        }
+      } catch (e) {
+        console.error('Error loading data:', e);
+        leads = generateInitialSampleData();
+      }
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(leads));
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify({
+          salesPersons: salesPersonsList,
+          areas: areasList
+        }));
+      } catch (e) {
+        console.error('Failed to save to localStorage:', e);
+      }
+    }
+
+    function getFollowUpStatus(lead) {
+      if (!lead.nextFollowUpDate) return { type: 'none', label: 'No Follow-up Scheduled', badgeClass: 'bg-slate-100 text-slate-500' };
+      if (lead.status === 'Converted / Won' || lead.status === 'Lost / Closed') {
+        return { type: 'completed', label: 'Completed', badgeClass: 'bg-emerald-50 text-emerald-600' };
+      }
+
+      const todayStr = getTodayString();
+      if (lead.nextFollowUpDate < todayStr) {
+        const d1 = new Date(lead.nextFollowUpDate);
+        const d2 = new Date(todayStr);
+        const diffDays = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
+        return {
+          type: 'overdue',
+          label: `Overdue (${diffDays}d ago)`,
+          badgeClass: 'bg-rose-100 text-rose-800 font-semibold border border-rose-300'
+        };
+      } else if (lead.nextFollowUpDate === todayStr) {
+        return {
+          type: 'today',
+          label: `DUE TODAY ${lead.nextFollowUpTime ? '@ ' + lead.nextFollowUpTime : ''}`,
+          badgeClass: 'bg-amber-100 text-amber-900 font-bold border border-amber-400 ring-2 ring-amber-300/60'
+        };
+      } else {
+        const d1 = new Date(todayStr);
+        const d2 = new Date(lead.nextFollowUpDate);
+        const diffDays = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+        const dayLabel = diffDays === 1 ? 'Tomorrow' : `In ${diffDays} days`;
+        return {
+          type: 'upcoming',
+          label: `${dayLabel} (${formatDateDisplay(lead.nextFollowUpDate)})`,
+          badgeClass: 'bg-blue-50 text-blue-700 border border-blue-200'
+        };
+      }
+    }
+
+    function playReminderChime() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        const playTone = (freq, start, duration) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime + start);
+          gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + duration);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(ctx.currentTime + start);
+          osc.stop(ctx.currentTime + start + duration);
+        };
+
+        playTone(523.25, 0.0, 0.35);
+        playTone(659.25, 0.12, 0.35);
+        playTone(783.99, 0.24, 0.5);
+      } catch (err) {
+        console.log('Audio autoplay policy active');
+      }
+    }
+
+    function getFilteredAndSortedLeads() {
+      const todayStr = getTodayString();
+      const yesterdayStr = getYesterdayString();
+
+      return leads.filter(lead => {
+        if (filters.search) {
+          const q = filters.search.toLowerCase().trim();
+          const matchText = [
+            lead.customerName,
+            lead.company,
+            lead.phone,
+            lead.email,
+            lead.salesPerson,
+            lead.area,
+            lead.requirementDetails,
+            lead.lastFollowUpInfo || ''
+          ].join(' ').toLowerCase();
+
+          if (!matchText.includes(q)) return false;
+        }
+
+        if (filters.dateRange !== 'all') {
+          if (filters.dateRange === 'today') {
+            if (lead.date !== todayStr) return false;
+          } else if (filters.dateRange === 'yesterday') {
+            if (lead.date !== yesterdayStr) return false;
+          } else if (filters.dateRange === 'week') {
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            const weekAgoStr = weekAgo.toISOString().slice(0, 10);
+            if (lead.date < weekAgoStr) return false;
+          } else if (filters.dateRange === 'month') {
+            const monthAgo = new Date();
+            monthAgo.setDate(monthAgo.getDate() - 30);
+            const monthAgoStr = monthAgo.toISOString().slice(0, 10);
+            if (lead.date < monthAgoStr) return false;
+          } else if (filters.dateRange === 'custom') {
+            if (filters.customStartDate && lead.date < filters.customStartDate) return false;
+            if (filters.customEndDate && lead.date > filters.customEndDate) return false;
+          }
+        }
+
+        if (filters.salesPerson !== 'all' && lead.salesPerson !== filters.salesPerson) return false;
+        if (filters.area !== 'all' && lead.area !== filters.area) return false;
+
+        if (filters.followUpStatus !== 'all') {
+          const fuStatus = getFollowUpStatus(lead).type;
+          if (filters.followUpStatus === 'today' && fuStatus !== 'today') return false;
+          if (filters.followUpStatus === 'overdue' && fuStatus !== 'overdue') return false;
+          if (filters.followUpStatus === 'upcoming' && fuStatus !== 'upcoming') return false;
+          if (filters.followUpStatus === 'none' && fuStatus !== 'none') return false;
+        }
+
+        if (filters.status !== 'all' && lead.status !== filters.status) return false;
+        if (filters.priority !== 'all' && lead.priority !== filters.priority) return false;
+
+        return true;
+      }).sort((a, b) => {
+        let valA = a[sortColumn] || '';
+        let valB = b[sortColumn] || '';
+
+        if (sortColumn === 'priority') {
+          const pMap = { 'High': 3, 'Medium': 2, 'Low': 1 };
+          valA = pMap[valA] || 0;
+          valB = pMap[valB] || 0;
+        }
+
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    function computeStatistics() {
+      let total = leads.length;
+      let dueToday = 0;
+      let overdue = 0;
+      let newVisitorsThisWeek = 0;
+      let converted = 0;
+
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const weekAgoStr = weekAgo.toISOString().slice(0, 10);
+
+      leads.forEach(lead => {
+        const fu = getFollowUpStatus(lead);
+        if (fu.type === 'today') dueToday++;
+        if (fu.type === 'overdue') overdue++;
+        if (lead.date >= weekAgoStr) newVisitorsThisWeek++;
+        if (lead.status === 'Converted / Won') converted++;
+      });
+
+      return { total, dueToday, overdue, newVisitorsThisWeek, converted };
+    }
+
+    function renderTopAlertBanner() {
+      const container = document.getElementById('reminderAlertBanner');
+      if (!container) return;
+
+      const stats = computeStatistics();
+      if (stats.dueToday === 0 && stats.overdue === 0) {
+        container.classList.add('hidden');
+        container.style.display = 'none';
+        container.innerHTML = '';
+        return;
+      }
+
+      container.classList.remove('hidden');
+      container.style.display = 'flex';
+      let alertsHtml = '';
+
+      if (stats.overdue > 0) {
+        alertsHtml += `
+          <div class="flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-800 px-4 py-2.5 rounded-lg text-sm flex-1">
+            <span class="flex h-3 w-3 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+            </span>
+            <span class="font-semibold">${stats.overdue} Overdue Follow-up${stats.overdue > 1 ? 's' : ''}!</span>
+            <span class="text-rose-600 hidden md:inline">Customers are waiting for your callback.</span>
+            <button type="button" onclick="setFilterQuick('overdue')" class="ml-auto underline font-medium hover:text-rose-950 cursor-pointer">View Overdue &rarr;</button>
+          </div>
+        `;
+      }
+
+      if (stats.dueToday > 0) {
+        alertsHtml += `
+          <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-800 px-4 py-2.5 rounded-lg text-sm flex-1">
+            <span class="text-amber-500 text-base">⏰</span>
+            <span class="font-bold">${stats.dueToday} Follow-up${stats.dueToday > 1 ? 's' : ''} Scheduled Today!</span>
+            <span class="text-amber-700 hidden md:inline">Keep customer engagements timely.</span>
+            <button type="button" onclick="setFilterQuick('today')" class="ml-auto underline font-medium hover:text-amber-950 cursor-pointer">View Today &rarr;</button>
+          </div>
+        `;
+      }
+
+      container.innerHTML = alertsHtml;
+    }
+
+    function renderKPIs() {
+      const stats = computeStatistics();
+      
+      const elTotal = document.getElementById('statTotal');
+      if (elTotal) elTotal.textContent = stats.total;
+      const elDueToday = document.getElementById('statDueToday');
+      if (elDueToday) elDueToday.textContent = stats.dueToday;
+      const elOverdue = document.getElementById('statOverdue');
+      if (elOverdue) elOverdue.textContent = stats.overdue;
+      const elNewWeek = document.getElementById('statNewWeek');
+      if (elNewWeek) elNewWeek.textContent = stats.newVisitorsThisWeek;
+      const elConverted = document.getElementById('statConverted');
+      if (elConverted) elConverted.textContent = stats.converted;
+
+      const overdueCard = document.getElementById('statOverdueCard');
+      if (overdueCard) {
+        if (stats.overdue > 0) overdueCard.classList.add('ring-2', 'ring-rose-400', 'bg-rose-50/50');
+        else overdueCard.classList.remove('ring-2', 'ring-rose-400', 'bg-rose-50/50');
+      }
+
+      const todayCard = document.getElementById('statTodayCard');
+      if (todayCard) {
+        if (stats.dueToday > 0) todayCard.classList.add('ring-2', 'ring-amber-300', 'bg-amber-50/40');
+        else todayCard.classList.remove('ring-2', 'ring-amber-300', 'bg-amber-50/40');
+      }
+
+      const totalReminders = stats.dueToday + stats.overdue;
+      const badge = document.getElementById('bellBadge');
+      if (badge) {
+        if (totalReminders > 0) {
+          badge.textContent = totalReminders;
+          badge.classList.remove('hidden');
+          badge.style.display = 'flex';
+        } else {
+          badge.classList.add('hidden');
+          badge.style.display = 'none';
+        }
+      }
+    }
+
+    function renderFilterDropdowns() {
+      const spSelect = document.getElementById('filterSalesPerson');
+      const areaSelect = document.getElementById('filterArea');
+
+      if (spSelect) {
+        const currentVal = spSelect.value;
+        spSelect.innerHTML = `<option value="all">All Sales Persons (${salesPersonsList.length})</option>` +
+          salesPersonsList.map(sp => `<option value="${escapeHtml(sp)}">${escapeHtml(sp)}</option>`).join('');
+        spSelect.value = currentVal || 'all';
+      }
+
+      if (areaSelect) {
+        const currentVal = areaSelect.value;
+        areaSelect.innerHTML = `<option value="all">All Areas (${areasList.length})</option>` +
+          areasList.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+        areaSelect.value = currentVal || 'all';
+      }
+
+      populateFormDropdowns();
+    }
+
+    function populateFormDropdowns() {
+      const formSP = document.getElementById('formSalesPerson');
+      const formArea = document.getElementById('formArea');
+      const fuFormSP = document.getElementById('fuSalesPerson');
+
+      if (formSP) {
+        formSP.innerHTML = `<option value="">Select Sales Representative *</option>` +
+          salesPersonsList.map(sp => `<option value="${escapeHtml(sp)}">${escapeHtml(sp)}</option>`).join('');
+      }
+
+      if (fuFormSP) {
+        fuFormSP.innerHTML = salesPersonsList.map(sp => `<option value="${escapeHtml(sp)}">${escapeHtml(sp)}</option>`).join('');
+      }
+
+      if (formArea) {
+        formArea.innerHTML = `<option value="">Select Area / Territory *</option>` +
+          areasList.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+      }
+    }
+
+    function renderMainView() {
+      const filtered = getFilteredAndSortedLeads();
+      const countDisplay = document.getElementById('resultsCount');
+      if (countDisplay) {
+        countDisplay.textContent = `Showing ${filtered.length} of ${leads.length} record${leads.length === 1 ? '' : 's'}`;
+      }
+
+      renderKPIs();
+      renderTopAlertBanner();
+
+      if (currentView === 'table') {
+        renderTableView(filtered);
+      } else if (currentView === 'cards') {
+        renderCardsView(filtered);
+      } else if (currentView === 'kanban') {
+        renderKanbanView(filtered);
+      }
+    }
+
+    function renderTableView(list) {
+      const tableBox = document.getElementById('tableViewContainer');
+      const cardsBox = document.getElementById('cardsViewContainer');
+      const kanbanBox = document.getElementById('kanbanViewContainer');
+
+      if (tableBox) { tableBox.classList.remove('hidden'); tableBox.style.display = 'block'; }
+      if (cardsBox) { cardsBox.classList.add('hidden'); cardsBox.style.display = 'none'; }
+      if (kanbanBox) { kanbanBox.classList.add('hidden'); kanbanBox.style.display = 'none'; }
+
+      const tbody = document.getElementById('leadsTableBody');
+      if (!tbody) return;
+
+      if (list.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="9" class="px-6 py-16 text-center text-slate-500">
+              <div class="max-w-sm mx-auto flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-3 text-xl">
+                  🔍
+                </div>
+                <p class="font-semibold text-slate-700 text-base">No visitors or leads match the current filters</p>
+                <p class="text-xs text-slate-400 mt-1">Try resetting the filters or add a new visitor record.</p>
+                <button type="button" onclick="resetFilters()" class="mt-4 px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-xs font-medium cursor-pointer">
+                  Reset Filters
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = list.map(lead => {
+        const fuStatus = getFollowUpStatus(lead);
+        const statusCfg = STATUS_CONFIG[lead.status] || STATUS_CONFIG['New Visitor'];
+        const priorityCfg = PRIORITY_CONFIG[lead.priority] || PRIORITY_CONFIG['Medium'];
+
+        let lastFollowUpDisplay = '';
+        if (!lead.lastFollowUpDate && (!lead.lastFollowUpInfo || lead.lastFollowUpInfo.trim() === '')) {
+          lastFollowUpDisplay = `
+            <div class="text-xs text-slate-400 italic flex items-center gap-1.5">
+              <span class="inline-block w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+              <span>New Customer (First Visit)</span>
+            </div>
+          `;
+        } else {
+          lastFollowUpDisplay = `
+            <div>
+              <div class="text-xs font-semibold text-slate-800 flex items-center gap-1">
+                <span class="text-slate-400">📅</span> ${formatDateDisplay(lead.lastFollowUpDate)}
+              </div>
+              <p class="text-xs text-slate-600 line-clamp-2 mt-0.5 max-w-xs" title="${escapeHtml(lead.lastFollowUpInfo || '')}">
+                ${escapeHtml(lead.lastFollowUpInfo || 'No notes entered')}
+              </p>
+            </div>
+          `;
+        }
+
+        let nextFollowUpDisplay = '';
+        if (lead.nextFollowUpDate) {
+          nextFollowUpDisplay = `
+            <div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs ${fuStatus.badgeClass}">
+                ${fuStatus.label}
+              </span>
+              ${lead.reminderEnabled ? '<span class="ml-1 text-xs text-amber-500" title="Reminder Active">🔔</span>' : ''}
+              <div class="text-xs text-slate-500 mt-0.5">
+                ${formatDateDisplay(lead.nextFollowUpDate)} ${lead.nextFollowUpTime ? '@ ' + lead.nextFollowUpTime : ''}
+              </div>
+            </div>
+          `;
+        } else {
+          nextFollowUpDisplay = `<span class="text-xs text-slate-400">Not Scheduled</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition-colors border-b border-slate-100 group">
+            <td class="px-4 py-3.5 whitespace-nowrap">
+              <div class="text-sm font-medium text-slate-800">${formatDateDisplay(lead.date)}</div>
+              <div class="text-xs text-slate-400 font-mono">${lead.time || '10:00'}</div>
+            </td>
+            <td class="px-4 py-3.5 min-w-[200px]">
+              <div class="flex items-start gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">
+                  ${escapeHtml(lead.customerName.charAt(0).toUpperCase())}
+                </div>
+                <div>
+                  <div class="text-sm font-semibold text-slate-900 group-hover:text-indigo-600 cursor-pointer" onclick="openViewDetailsModal('${lead.id}')">
+                    ${escapeHtml(lead.customerName)}
+                  </div>
+                  ${lead.company ? `<div class="text-xs text-slate-500 font-medium">${escapeHtml(lead.company)}</div>` : ''}
+                  <div class="flex items-center gap-2 mt-1 text-xs text-slate-400">
+                    ${lead.phone ? `<a href="tel:${escapeHtml(lead.phone)}" class="hover:text-indigo-600 flex items-center gap-1" title="Call">📞 ${escapeHtml(lead.phone)}</a>` : ''}
+                    ${lead.email ? `<a href="mailto:${escapeHtml(lead.email)}" class="hover:text-indigo-600 flex items-center gap-1" title="Email">✉️</a>` : ''}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3.5 whitespace-nowrap">
+              <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                ${escapeHtml(lead.salesPerson)}
+              </div>
+            </td>
+            <td class="px-4 py-3.5 whitespace-nowrap">
+              <div class="text-xs font-medium text-slate-700 flex items-center gap-1">
+                <span class="text-slate-400">📍</span> ${escapeHtml(lead.area)}
+              </div>
+            </td>
+            <td class="px-4 py-3.5 min-w-[220px]">
+              <div class="text-xs text-slate-700 line-clamp-2 max-w-xs" title="${escapeHtml(lead.requirementDetails)}">
+                ${escapeHtml(lead.requirementDetails)}
+              </div>
+              <div class="flex items-center gap-1.5 mt-1">
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${priorityCfg.bg} ${priorityCfg.text} border ${priorityCfg.border}">
+                  ${priorityCfg.icon} ${lead.priority}
+                </span>
+                ${lead.requirementCategory ? `<span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">${escapeHtml(lead.requirementCategory)}</span>` : ''}
+              </div>
+            </td>
+            <td class="px-4 py-3.5 min-w-[200px]">
+              ${lastFollowUpDisplay}
+            </td>
+            <td class="px-4 py-3.5 whitespace-nowrap">
+              ${nextFollowUpDisplay}
+            </td>
+            <td class="px-4 py-3.5 whitespace-nowrap">
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${statusCfg.bg} ${statusCfg.text} border ${statusCfg.border}">
+                <span class="w-1.5 h-1.5 rounded-full ${statusCfg.dot}"></span>
+                ${lead.status}
+              </span>
+            </td>
+            <td class="px-4 py-3.5 whitespace-nowrap text-right text-xs font-medium">
+              <div class="flex items-center justify-end gap-1.5">
+                <button type="button" onclick="openFollowUpModal('${lead.id}')" title="Log Follow-up / Interaction" class="px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition cursor-pointer">
+                  <span>+ Follow-up</span>
+                </button>
+                <button type="button" onclick="openViewDetailsModal('${lead.id}')" title="View Lead Profile & History" class="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition cursor-pointer">
+                  👁️
+                </button>
+                <button type="button" onclick="openEditModal('${lead.id}')" title="Edit Customer Details" class="p-1.5 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg transition cursor-pointer">
+                  ✏️
+                </button>
+                <button type="button" onclick="confirmDeleteLead('${lead.id}')" title="Delete" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderCardsView(list) {
+      const tableBox = document.getElementById('tableViewContainer');
+      const cardsBox = document.getElementById('cardsViewContainer');
+      const kanbanBox = document.getElementById('kanbanViewContainer');
+
+      if (tableBox) { tableBox.classList.add('hidden'); tableBox.style.display = 'none'; }
+      if (cardsBox) { cardsBox.classList.remove('hidden'); cardsBox.style.display = 'block'; }
+      if (kanbanBox) { kanbanBox.classList.add('hidden'); kanbanBox.style.display = 'none'; }
+
+      const container = document.getElementById('cardsGrid');
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-16 text-center text-slate-500">
+            <p class="font-semibold text-slate-700">No visitors or leads found matching filters</p>
+            <button type="button" onclick="resetFilters()" class="mt-3 px-3 py-1.5 bg-slate-200 text-slate-700 rounded text-xs font-medium cursor-pointer">
+              Clear Filters
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(lead => {
+        const fuStatus = getFollowUpStatus(lead);
+        const statusCfg = STATUS_CONFIG[lead.status] || STATUS_CONFIG['New Visitor'];
+        const priorityCfg = PRIORITY_CONFIG[lead.priority] || PRIORITY_CONFIG['Medium'];
+
+        return `
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-all p-5 flex flex-col justify-between relative group">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="text-xs font-medium text-slate-400 flex items-center gap-1">
+                  🗓️ ${formatDateDisplay(lead.date)} <span class="font-mono text-[11px]">(${lead.time || '10:00'})</span>
+                </span>
+                <div class="flex items-center gap-1.5">
+                  <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold ${priorityCfg.bg} ${priorityCfg.text} border ${priorityCfg.border}">
+                    ${priorityCfg.icon} ${lead.priority}
+                  </span>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium ${statusCfg.bg} ${statusCfg.text} border ${statusCfg.border}">
+                    <span class="w-1.5 h-1.5 rounded-full ${statusCfg.dot}"></span>
+                    ${lead.status}
+                  </span>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <h3 class="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition cursor-pointer" onclick="openViewDetailsModal('${lead.id}')">
+                  ${escapeHtml(lead.customerName)}
+                </h3>
+                ${lead.company ? `<p class="text-xs font-medium text-slate-500">${escapeHtml(lead.company)}</p>` : ''}
+                
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-slate-500">
+                  ${lead.phone ? `<a href="tel:${escapeHtml(lead.phone)}" class="hover:text-indigo-600 flex items-center gap-1">📞 ${escapeHtml(lead.phone)}</a>` : ''}
+                  ${lead.email ? `<a href="mailto:${escapeHtml(lead.email)}" class="hover:text-indigo-600 flex items-center gap-1">✉️ Email</a>` : ''}
+                </div>
+              </div>
+
+              <div class="flex flex-wrap items-center gap-1.5 mb-3">
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-slate-100 text-slate-700 font-medium">
+                  👤 ${escapeHtml(lead.salesPerson)}
+                </span>
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs bg-indigo-50 text-indigo-700 font-medium">
+                  📍 ${escapeHtml(lead.area)}
+                </span>
+              </div>
+
+              <div class="bg-slate-50 border border-slate-100 rounded-lg p-2.5 mb-3 text-xs text-slate-700">
+                <span class="font-semibold text-slate-900 block mb-0.5">Requirement:</span>
+                <p class="line-clamp-2 leading-relaxed">${escapeHtml(lead.requirementDetails)}</p>
+              </div>
+
+              <div class="border-t border-slate-100 pt-3 mb-3">
+                <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Last Follow-up:</div>
+                ${!lead.lastFollowUpDate && (!lead.lastFollowUpInfo || lead.lastFollowUpInfo.trim() === '') ? `
+                  <div class="text-xs text-slate-400 italic">No previous follow-up (New Customer)</div>
+                ` : `
+                  <div class="text-xs text-slate-700">
+                    <span class="font-semibold text-slate-900">📅 ${formatDateDisplay(lead.lastFollowUpDate)}:</span>
+                    <span class="line-clamp-2 text-slate-600 mt-0.5">${escapeHtml(lead.lastFollowUpInfo || '')}</span>
+                  </div>
+                `}
+              </div>
+            </div>
+
+            <div>
+              <div class="bg-slate-50 rounded-lg p-2.5 mb-3 flex items-center justify-between border border-slate-100">
+                <div>
+                  <div class="text-[10px] uppercase font-bold text-slate-400">Next Scheduled Follow-up</div>
+                  <div class="text-xs font-semibold text-slate-800 mt-0.5">
+                    ${lead.nextFollowUpDate ? formatDateDisplay(lead.nextFollowUpDate) + (lead.nextFollowUpTime ? ' @ ' + lead.nextFollowUpTime : '') : 'None'}
+                  </div>
+                </div>
+                <div>
+                  <span class="px-2 py-1 rounded text-xs ${fuStatus.badgeClass}">
+                    ${fuStatus.label}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                <button type="button" onclick="openFollowUpModal('${lead.id}')" class="flex-1 py-1.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1 shadow-sm transition cursor-pointer">
+                  <span>+ Follow-up</span>
+                </button>
+                <button type="button" onclick="openViewDetailsModal('${lead.id}')" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition cursor-pointer" title="View Full Timeline">
+                  👁️
+                </button>
+                <button type="button" onclick="openEditModal('${lead.id}')" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition cursor-pointer" title="Edit">
+                  ✏️
+                </button>
+                <button type="button" onclick="confirmDeleteLead('${lead.id}')" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg text-xs transition cursor-pointer" title="Delete">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderKanbanView(list) {
+      const tableBox = document.getElementById('tableViewContainer');
+      const cardsBox = document.getElementById('cardsViewContainer');
+      const kanbanBox = document.getElementById('kanbanViewContainer');
+
+      if (tableBox) { tableBox.classList.add('hidden'); tableBox.style.display = 'none'; }
+      if (cardsBox) { cardsBox.classList.add('hidden'); cardsBox.style.display = 'none'; }
+      if (kanbanBox) { kanbanBox.classList.remove('hidden'); kanbanBox.style.display = 'block'; }
+
+      const stages = [
+        { name: 'New Visitor', title: 'New Visitors / Inquiries', color: 'border-blue-400' },
+        { name: 'Follow-up Pending', title: 'Follow-up Pending', color: 'border-orange-400' },
+        { name: 'In Discussion', title: 'In Discussion / Demo', color: 'border-purple-400' },
+        { name: 'Quotation Sent', title: 'Quotation Sent', color: 'border-amber-400' },
+        { name: 'Converted / Won', title: 'Converted / Closed Won', color: 'border-emerald-400' }
+      ];
+
+      const kanbanBoard = document.getElementById('kanbanBoard');
+      if (!kanbanBoard) return;
+
+      kanbanBoard.innerHTML = stages.map(stage => {
+        const stageLeads = list.filter(l => l.status === stage.name);
+        return `
+          <div class="flex-shrink-0 w-80 bg-slate-100/80 rounded-xl p-3 flex flex-col max-h-[calc(100vh-280px)] border-t-4 ${stage.color}">
+            <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-200">
+              <span class="font-bold text-xs uppercase tracking-wider text-slate-700">${stage.title}</span>
+              <span class="bg-white text-slate-700 px-2 py-0.5 rounded-full text-xs font-bold shadow-sm">${stageLeads.length}</span>
+            </div>
+
+            <div class="flex-1 overflow-y-auto space-y-2.5 pr-1">
+              ${stageLeads.length === 0 ? `
+                <div class="py-8 text-center text-xs text-slate-400">No records in this stage</div>
+              ` : stageLeads.map(lead => {
+                const fuStatus = getFollowUpStatus(lead);
+                return `
+                  <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm hover:shadow transition flex flex-col gap-2">
+                    <div class="flex items-start justify-between">
+                      <h4 class="font-bold text-sm text-slate-900 hover:text-indigo-600 cursor-pointer" onclick="openViewDetailsModal('${lead.id}')">
+                        ${escapeHtml(lead.customerName)}
+                      </h4>
+                      <span class="text-[10px] text-slate-400">${formatDateDisplay(lead.date)}</span>
+                    </div>
+                    ${lead.company ? `<div class="text-xs text-slate-500 font-medium -mt-1">${escapeHtml(lead.company)}</div>` : ''}
+                    
+                    <div class="text-xs text-slate-600 line-clamp-2 bg-slate-50 p-1.5 rounded">
+                      ${escapeHtml(lead.requirementDetails)}
+                    </div>
+
+                    <div class="flex items-center justify-between text-xs text-slate-500 pt-1 border-t border-slate-100">
+                      <span>📍 ${escapeHtml(lead.area)}</span>
+                      <span>👤 ${escapeHtml(lead.salesPerson.split(' ')[0])}</span>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-1">
+                      <span class="text-[10px] px-1.5 py-0.5 rounded ${fuStatus.badgeClass}">
+                        ${fuStatus.label}
+                      </span>
+                      <button type="button" onclick="openFollowUpModal('${lead.id}')" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold cursor-pointer">
+                        + Follow-up
+                      </button>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Modal Control Functions
+    function openNewVisitorModal() {
+      const modal = document.getElementById('leadModal');
+      const form = document.getElementById('leadForm');
+      if (!modal) return;
+      if (form) form.reset();
+
+      const titleEl = document.getElementById('modalTitle');
+      if (titleEl) titleEl.textContent = 'Record New Visitor / Lead';
+      
+      const idEl = document.getElementById('leadIdField');
+      if (idEl) idEl.value = '';
+
+      const dateEl = document.getElementById('formDate');
+      if (dateEl) dateEl.value = getTodayString();
+
+      const timeEl = document.getElementById('formTime');
+      if (timeEl) timeEl.value = getCurrentTimeString();
+      
+      const priorityEl = document.getElementById('formPriority');
+      if (priorityEl) priorityEl.value = 'Medium';
+
+      const statusEl = document.getElementById('formStatus');
+      if (statusEl) statusEl.value = 'New Visitor';
+
+      const toggleEl = document.getElementById('scheduleFollowUpToggle');
+      if (toggleEl) {
+        toggleEl.checked = true;
+        toggleFollowUpSchedulingInputs(true);
+      }
+      
+      const tom = new Date();
+      tom.setDate(tom.getDate() + 1);
+      const nextDateEl = document.getElementById('formNextFollowUpDate');
+      if (nextDateEl) nextDateEl.value = tom.toISOString().slice(0, 10);
+
+      const nextTimeEl = document.getElementById('formNextFollowUpTime');
+      if (nextTimeEl) nextTimeEl.value = '11:00';
+
+      const reminderEl = document.getElementById('formReminderEnabled');
+      if (reminderEl) reminderEl.checked = true;
+
+      const newCustomerBanner = document.getElementById('newCustomerNotice');
+      if (newCustomerBanner) {
+        newCustomerBanner.classList.remove('hidden');
+        newCustomerBanner.style.display = 'flex';
+      }
+
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function openEditModal(leadId) {
+      const lead = leads.find(l => l.id === leadId);
+      if (!lead) return;
+
+      const modal = document.getElementById('leadModal');
+      if (!modal) return;
+
+      const titleEl = document.getElementById('modalTitle');
+      if (titleEl) titleEl.textContent = 'Edit Customer & Lead Details';
+
+      document.getElementById('leadIdField').value = lead.id;
+      document.getElementById('formDate').value = lead.date || getTodayString();
+      document.getElementById('formTime').value = lead.time || '10:00';
+      document.getElementById('formCustomerName').value = lead.customerName || '';
+      document.getElementById('formCompany').value = lead.company || '';
+      document.getElementById('formPhone').value = lead.phone || '';
+      document.getElementById('formEmail').value = lead.email || '';
+      document.getElementById('formSalesPerson').value = lead.salesPerson || '';
+      document.getElementById('formArea').value = lead.area || '';
+      document.getElementById('formCategory').value = lead.requirementCategory || '';
+      document.getElementById('formPriority').value = lead.priority || 'Medium';
+      document.getElementById('formStatus').value = lead.status || 'New Visitor';
+      document.getElementById('formRequirements').value = lead.requirementDetails || '';
+
+      const hasNextFU = Boolean(lead.nextFollowUpDate);
+      const toggleEl = document.getElementById('scheduleFollowUpToggle');
+      if (toggleEl) {
+        toggleEl.checked = hasNextFU;
+        toggleFollowUpSchedulingInputs(hasNextFU);
+      }
+
+      if (hasNextFU) {
+        document.getElementById('formNextFollowUpDate').value = lead.nextFollowUpDate;
+        document.getElementById('formNextFollowUpTime').value = lead.nextFollowUpTime || '11:00';
+        document.getElementById('formReminderEnabled').checked = Boolean(lead.reminderEnabled);
+      }
+
+      const newCustomerBanner = document.getElementById('newCustomerNotice');
+      if (newCustomerBanner) {
+        newCustomerBanner.classList.add('hidden');
+        newCustomerBanner.style.display = 'none';
+      }
+
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeLeadModal() {
+      const modal = document.getElementById('leadModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function handleSaveLead(e) {
+      if (e) e.preventDefault();
+
+      const id = document.getElementById('leadIdField').value;
+      const date = document.getElementById('formDate').value;
+      const time = document.getElementById('formTime').value;
+      const customerName = document.getElementById('formCustomerName').value.trim();
+      const company = document.getElementById('formCompany').value.trim();
+      const phone = document.getElementById('formPhone').value.trim();
+      const email = document.getElementById('formEmail').value.trim();
+      const salesPerson = document.getElementById('formSalesPerson').value;
+      const area = document.getElementById('formArea').value;
+      const requirementCategory = document.getElementById('formCategory').value.trim();
+      const priority = document.getElementById('formPriority').value;
+      const status = document.getElementById('formStatus').value;
+      const requirementDetails = document.getElementById('formRequirements').value.trim();
+
+      if (!customerName || !salesPerson || !area || !requirementDetails) {
+        showToast('Please fill all mandatory fields (Name, Sales Person, Area, Requirement)', 'error');
+        return;
+      }
+
+      const scheduleFU = document.getElementById('scheduleFollowUpToggle').checked;
+      let nextFollowUpDate = null;
+      let nextFollowUpTime = null;
+      let reminderEnabled = false;
+
+      if (scheduleFU) {
+        nextFollowUpDate = document.getElementById('formNextFollowUpDate').value || null;
+        nextFollowUpTime = document.getElementById('formNextFollowUpTime').value || '11:00';
+        reminderEnabled = document.getElementById('formReminderEnabled').checked;
+      }
+
+      if (id) {
+        const leadIndex = leads.findIndex(l => l.id === id);
+        if (leadIndex !== -1) {
+          leads[leadIndex] = {
+            ...leads[leadIndex],
+            date,
+            time,
+            customerName,
+            company,
+            phone,
+            email,
+            salesPerson,
+            area,
+            requirementCategory,
+            priority,
+            status,
+            requirementDetails,
+            nextFollowUpDate,
+            nextFollowUpTime,
+            reminderEnabled,
+            updatedAt: Date.now()
+          };
+          showToast('Lead details updated successfully', 'success');
+        }
+      } else {
+        const newLead = {
+          id: 'lead-' + Date.now(),
+          date: date || getTodayString(),
+          time: time || getCurrentTimeString(),
+          customerName,
+          company,
+          phone,
+          email,
+          salesPerson,
+          area,
+          requirementCategory,
+          priority,
+          status,
+          requirementDetails,
+          nextFollowUpDate,
+          nextFollowUpTime,
+          reminderEnabled,
+          lastFollowUpDate: null,
+          lastFollowUpInfo: '',
+          followUpHistory: [],
+          createdAt: Date.now()
+        };
+
+        leads.unshift(newLead);
+        showToast('New visitor & lead recorded successfully', 'success');
+      }
+
+      saveData();
+      closeLeadModal();
+      renderMainView();
+    }
+
+    function openFollowUpModal(leadId) {
+      const lead = leads.find(l => l.id === leadId);
+      if (!lead) return;
+
+      document.getElementById('fuLeadId').value = lead.id;
+      document.getElementById('fuCustomerNameDisplay').textContent = lead.customerName + (lead.company ? ` (${lead.company})` : '');
+      
+      const prevInfoEl = document.getElementById('fuPrevInfoDisplay');
+      if (lead.lastFollowUpDate) {
+        prevInfoEl.innerHTML = `
+          <div class="bg-indigo-50/70 border border-indigo-100 rounded-lg p-3 text-xs text-indigo-900">
+            <div class="font-bold flex items-center gap-1 text-indigo-950">
+              <span>🕒 Last Follow-up Recorded:</span> ${formatDateDisplay(lead.lastFollowUpDate)}
+            </div>
+            <div class="mt-1 text-slate-700 leading-relaxed">${escapeHtml(lead.lastFollowUpInfo || 'No remarks')}</div>
+          </div>
+        `;
+      } else {
+        prevInfoEl.innerHTML = `
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs text-slate-500 italic">
+            ℹ️ First follow-up session for this customer (No previous history).
+          </div>
+        `;
+      }
+
+      document.getElementById('fuDate').value = getTodayString();
+      document.getElementById('fuTime').value = getCurrentTimeString();
+      document.getElementById('fuSalesPerson').value = lead.salesPerson || salesPersonsList[0];
+      document.getElementById('fuType').value = 'Phone Call';
+      document.getElementById('fuRemarks').value = '';
+      document.getElementById('fuNewStatus').value = lead.status;
+
+      const nextWeekObj = new Date();
+      nextWeekObj.setDate(nextWeekObj.getDate() + 3);
+      document.getElementById('fuNextDate').value = nextWeekObj.toISOString().slice(0, 10);
+      document.getElementById('fuNextTime').value = '11:00';
+      document.getElementById('fuNextReminder').checked = true;
+
+      const modal = document.getElementById('followUpModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeFollowUpModal() {
+      const modal = document.getElementById('followUpModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function handleSaveFollowUp(e) {
+      if (e) e.preventDefault();
+
+      const leadId = document.getElementById('fuLeadId').value;
+      const leadIndex = leads.findIndex(l => l.id === leadId);
+      if (leadIndex === -1) return;
+
+      const fuDate = document.getElementById('fuDate').value;
+      const fuTime = document.getElementById('fuTime').value;
+      const fuSalesPerson = document.getElementById('fuSalesPerson').value;
+      const fuType = document.getElementById('fuType').value;
+      const fuRemarks = document.getElementById('fuRemarks').value.trim();
+      const fuNewStatus = document.getElementById('fuNewStatus').value;
+
+      const scheduleNext = document.getElementById('fuScheduleNextToggle').checked;
+      let nextFollowUpDate = null;
+      let nextFollowUpTime = null;
+      let reminderEnabled = false;
+
+      if (scheduleNext) {
+        nextFollowUpDate = document.getElementById('fuNextDate').value || null;
+        nextFollowUpTime = document.getElementById('fuNextTime').value || '11:00';
+        reminderEnabled = document.getElementById('fuNextReminder').checked;
+      }
+
+      if (!fuRemarks) {
+        showToast('Please enter follow-up remarks/info', 'error');
+        return;
+      }
+
+      const lead = leads[leadIndex];
+      const newHistoryEntry = {
+        id: 'fh-' + Date.now(),
+        date: fuDate,
+        time: fuTime,
+        conductedBy: fuSalesPerson,
+        type: fuType,
+        remarks: fuRemarks,
+        newStatus: fuNewStatus,
+        timestamp: Date.now()
+      };
+
+      if (!lead.followUpHistory) lead.followUpHistory = [];
+      lead.followUpHistory.unshift(newHistoryEntry);
+
+      lead.lastFollowUpDate = fuDate;
+      lead.lastFollowUpInfo = `[${fuType}] ${fuRemarks}`;
+      lead.status = fuNewStatus;
+      lead.nextFollowUpDate = nextFollowUpDate;
+      lead.nextFollowUpTime = nextFollowUpTime;
+      lead.reminderEnabled = reminderEnabled;
+      lead.updatedAt = Date.now();
+
+      saveData();
+      closeFollowUpModal();
+      renderMainView();
+      showToast('Follow-up recorded and schedule updated!', 'success');
+    }
+
+    function openViewDetailsModal(leadId) {
+      const lead = leads.find(l => l.id === leadId);
+      if (!lead) return;
+
+      const fuStatus = getFollowUpStatus(lead);
+      const statusCfg = STATUS_CONFIG[lead.status] || STATUS_CONFIG['New Visitor'];
+      const priorityCfg = PRIORITY_CONFIG[lead.priority] || PRIORITY_CONFIG['Medium'];
+
+      const container = document.getElementById('viewDetailsContent');
+      container.innerHTML = `
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-5">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="text-xl font-bold text-slate-900">${escapeHtml(lead.customerName)}</h2>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold ${priorityCfg.bg} ${priorityCfg.text} border ${priorityCfg.border}">
+                  ${priorityCfg.icon} ${lead.priority} Priority
+                </span>
+              </div>
+              ${lead.company ? `<div class="text-sm font-medium text-slate-600 mt-0.5">${escapeHtml(lead.company)}</div>` : ''}
+              <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 mt-2">
+                <span>🗓️ First Visit: <strong>${formatDateDisplay(lead.date)}</strong> at ${lead.time || '10:00'}</span>
+                <span>👤 Representative: <strong>${escapeHtml(lead.salesPerson)}</strong></span>
+                <span>📍 Territory: <strong>${escapeHtml(lead.area)}</strong></span>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-start md:items-end gap-2">
+              <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${statusCfg.bg} ${statusCfg.text} border ${statusCfg.border}">
+                <span class="w-2 h-2 rounded-full ${statusCfg.dot}"></span>
+                ${lead.status}
+              </span>
+              <div class="flex items-center gap-2">
+                ${lead.phone ? `<a href="tel:${escapeHtml(lead.phone)}" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-1 shadow-sm">📞 Call</a>` : ''}
+                ${lead.email ? `<a href="mailto:${escapeHtml(lead.email)}" class="px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-1 shadow-sm">✉️ Email</a>` : ''}
+                <button type="button" onclick="closeViewDetailsModal(); openEditModal('${lead.id}')" class="px-3 py-1.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-semibold shadow-sm transition cursor-pointer">
+                  ✏️ Edit
+                </button>
+                <button type="button" onclick="closeViewDetailsModal(); openFollowUpModal('${lead.id}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition cursor-pointer">
+                  + Log Follow-up
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-4 border-t border-slate-200">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Customer Requirement Details</div>
+            <p class="text-sm text-slate-800 leading-relaxed bg-white p-3 rounded-lg border border-slate-200">
+              ${escapeHtml(lead.requirementDetails)}
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+            <div class="bg-white p-3 rounded-lg border border-slate-200">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Last Follow-up Summary</div>
+              ${!lead.lastFollowUpDate && (!lead.lastFollowUpInfo || lead.lastFollowUpInfo.trim() === '') ? `
+                <div class="text-xs text-slate-400 italic mt-1">✨ New customer. No prior follow-ups recorded yet.</div>
+              ` : `
+                <div class="text-xs font-semibold text-slate-800 mt-1">📅 ${formatDateDisplay(lead.lastFollowUpDate)}</div>
+                <div class="text-xs text-slate-600 mt-0.5">${escapeHtml(lead.lastFollowUpInfo || '')}</div>
+              `}
+            </div>
+
+            <div class="bg-white p-3 rounded-lg border border-slate-200">
+              <div class="text-[11px] font-bold text-slate-400 uppercase">Next Scheduled Reminder</div>
+              <div class="flex items-center justify-between mt-1">
+                <div class="text-xs font-semibold text-slate-800">
+                  ${lead.nextFollowUpDate ? formatDateDisplay(lead.nextFollowUpDate) + (lead.nextFollowUpTime ? ' @ ' + lead.nextFollowUpTime : '') : 'None Scheduled'}
+                </div>
+                <span class="px-2 py-0.5 rounded text-xs ${fuStatus.badgeClass}">${fuStatus.label}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-base text-slate-800">Follow-up History & Timeline</h3>
+            <span class="text-xs text-slate-500">${(lead.followUpHistory || []).length} Recorded Interaction${(lead.followUpHistory || []).length === 1 ? '' : 's'}</span>
+          </div>
+
+          ${(!lead.followUpHistory || lead.followUpHistory.length === 0) ? `
+            <div class="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-slate-500 text-xs">
+              <div class="text-xl mb-1">📋</div>
+              <p class="font-semibold text-slate-700">No follow-ups recorded yet</p>
+              <p class="text-slate-400 mt-0.5">Click the "+ Log Follow-up" button to record call notes, meetings, or emails.</p>
+            </div>
+          ` : `
+            <div class="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-indigo-100">
+              ${lead.followUpHistory.map(item => `
+                <div class="relative group">
+                  <span class="absolute -left-6 top-1.5 w-4 h-4 rounded-full bg-indigo-600 border-4 border-white shadow-sm flex items-center justify-center"></span>
+                  <div class="bg-white border border-slate-200 rounded-lg p-3.5 shadow-xs hover:border-indigo-300 transition">
+                    <div class="flex items-center justify-between gap-2 text-xs mb-1.5">
+                      <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                        <span class="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded font-semibold">${escapeHtml(item.type || 'Interaction')}</span>
+                        by ${escapeHtml(item.conductedBy || lead.salesPerson)}
+                      </span>
+                      <span class="text-slate-400 font-mono text-[11px]">${formatDateDisplay(item.date)} ${item.time || ''}</span>
+                    </div>
+                    <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-line">${escapeHtml(item.remarks)}</p>
+                    ${item.newStatus ? `
+                      <div class="mt-2 pt-2 border-t border-slate-100 text-[11px] text-slate-500 flex items-center gap-1">
+                        <span>Status changed to:</span>
+                        <span class="font-semibold text-slate-700">${item.newStatus}</span>
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          `}
+        </div>
+      `;
+
+      const modal = document.getElementById('viewDetailsModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+      }
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeViewDetailsModal() {
+      const modal = document.getElementById('viewDetailsModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.style.display = 'none';
+      }
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function confirmDeleteLead(leadId) {
+      const lead = leads.find(l => l.id === leadId);
+      if (!lead) return;
+
+      if (confirm(`Are you sure you want to delete lead: "${lead.customerName}"? This action cannot be undone.`)) {
+        leads = leads.filter(l => l.id !== leadId);
+        saveData();
+        closeViewDetailsModal();
+        renderMainView();
+        showToast('Lead record removed successfully', 'info');
+      }
+    }
+
+    function toggleFollowUpSchedulingInputs(show) {
+      const box = document.getElementById('followUpSchedulingBox');
+      if (!box) return;
+      if (show) {
+        box.classList.remove('hidden');
+        box.style.display = 'grid';
+      } else {
+        box.classList.add('hidden');
+        box.style.display = 'none';
+      }
+    }
+
+    function toggleFuNextSchedulingInputs(show) {
+      const box = document.getElementById('fuNextSchedulingBox');
+      if (!box) return;
+      if (show) {
+        box.classList.remove('hidden');
+        box.style.display = 'grid';
+      } else {
+        box.classList.add('hidden');
+        box.style.display = 'none';
+      }
+    }
+
+    function promptAddSalesPerson() {
+      const name = prompt('Enter new Sales Representative full name:');
+      if (name && name.trim()) {
+        const cleanName = name.trim();
+        if (!salesPersonsList.includes(cleanName)) {
+          salesPersonsList.push(cleanName);
+          saveData();
+          renderFilterDropdowns();
+
+          const formSP = document.getElementById('formSalesPerson');
+          if (formSP) formSP.value = cleanName;
+          const fuSP = document.getElementById('fuSalesPerson');
+          if (fuSP) fuSP.value = cleanName;
+
+          showToast(`Added sales representative: ${cleanName}`, 'success');
+        }
+      }
+    }
+
+    function promptAddArea() {
+      const areaName = prompt('Enter new Area / Territory / Region name:');
+      if (areaName && areaName.trim()) {
+        const cleanArea = areaName.trim();
+        if (!areasList.includes(cleanArea)) {
+          areasList.push(cleanArea);
+          saveData();
+          renderFilterDropdowns();
+
+          const formArea = document.getElementById('formArea');
+          if (formArea) formArea.value = cleanArea;
+
+          showToast(`Added area: ${cleanArea}`, 'success');
+        }
+      }
+    }
+
+    function setFilterQuick(type) {
+      filters.search = '';
+      filters.dateRange = 'all';
+      filters.salesPerson = 'all';
+      filters.area = 'all';
+      filters.followUpStatus = 'all';
+      filters.status = 'all';
+      filters.priority = 'all';
+
+      if (document.getElementById('searchInput')) document.getElementById('searchInput').value = '';
+      if (document.getElementById('filterDateRange')) document.getElementById('filterDateRange').value = 'all';
+      if (document.getElementById('filterSalesPerson')) document.getElementById('filterSalesPerson').value = 'all';
+      if (document.getElementById('filterArea')) document.getElementById('filterArea').value = 'all';
+      if (document.getElementById('filterFollowUpStatus')) document.getElementById('filterFollowUpStatus').value = 'all';
+      if (document.getElementById('filterStatus')) document.getElementById('filterStatus').value = 'all';
+      if (document.getElementById('filterPriority')) document.getElementById('filterPriority').value = 'all';
+      
+      const customBox = document.getElementById('customDateRangeContainer');
+      if (customBox) {
+        customBox.classList.add('hidden');
+        customBox.style.display = 'none';
+      }
+
+      if (type === 'today') {
+        filters.followUpStatus = 'today';
+        document.getElementById('filterFollowUpStatus').value = 'today';
+      } else if (type === 'overdue') {
+        filters.followUpStatus = 'overdue';
+        document.getElementById('filterFollowUpStatus').value = 'overdue';
+      } else if (type === 'week' || type === 'newToday') {
+        filters.dateRange = 'week';
+        document.getElementById('filterDateRange').value = 'week';
+      } else if (type === 'converted') {
+        filters.status = 'Converted / Won';
+        document.getElementById('filterStatus').value = 'Converted / Won';
+      }
+
+      renderMainView();
+    }
+
+    function resetFilters() {
+      filters = {
+        search: '',
+        dateRange: 'all',
+        customStartDate: '',
+        customEndDate: '',
+        salesPerson: 'all',
+        area: 'all',
+        followUpStatus: 'all',
+        status: 'all',
+        priority: 'all'
+      };
+
+      if (document.getElementById('searchInput')) document.getElementById('searchInput').value = '';
+      if (document.getElementById('filterDateRange')) document.getElementById('filterDateRange').value = 'all';
+      if (document.getElementById('filterSalesPerson')) document.getElementById('filterSalesPerson').value = 'all';
+      if (document.getElementById('filterArea')) document.getElementById('filterArea').value = 'all';
+      if (document.getElementById('filterFollowUpStatus')) document.getElementById('filterFollowUpStatus').value = 'all';
+      if (document.getElementById('filterStatus')) document.getElementById('filterStatus').value = 'all';
+      if (document.getElementById('filterPriority')) document.getElementById('filterPriority').value = 'all';
+
+      const customRangeBox = document.getElementById('customDateRangeContainer');
+      if (customRangeBox) {
+        customRangeBox.classList.add('hidden');
+        customRangeBox.style.display = 'none';
+      }
+
+      renderMainView();
+      showToast('Filters cleared', 'info');
+    }
+
+    function switchView(mode) {
+      currentView = mode;
+
+      const btnTable = document.getElementById('btnViewTable');
+      const btnCards = document.getElementById('btnViewCards');
+      const btnKanban = document.getElementById('btnViewKanban');
+
+      [btnTable, btnCards, btnKanban].forEach(btn => {
+        if (btn) {
+          btn.classList.remove('bg-white', 'text-indigo-600', 'shadow-xs', 'font-bold');
+          btn.classList.add('text-slate-600', 'font-medium');
+        }
+      });
+
+      if (mode === 'table' && btnTable) {
+        btnTable.classList.add('bg-white', 'text-indigo-600', 'shadow-xs', 'font-bold');
+      } else if (mode === 'cards' && btnCards) {
+        btnCards.classList.add('bg-white', 'text-indigo-600', 'shadow-xs', 'font-bold');
+      } else if (mode === 'kanban' && btnKanban) {
+        btnKanban.classList.add('bg-white', 'text-indigo-600', 'shadow-xs', 'font-bold');
+      }
+
+      renderMainView();
+    }
+
+    function handleSort(column) {
+      if (sortColumn === column) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortColumn = column;
+        sortDirection = 'desc';
+      }
+      updateSortIcons();
+      renderMainView();
+    }
+
+    function updateSortIcons() {
+      document.querySelectorAll('[data-sort]').forEach(el => {
+        const col = el.getAttribute('data-sort');
+        const icon = el.querySelector('.sort-icon');
+        if (icon) {
+          if (col === sortColumn) {
+            icon.textContent = sortDirection === 'asc' ? '▲' : '▼';
+            icon.classList.remove('opacity-30');
+          } else {
+            icon.textContent = '⇅';
+            icon.classList.add('opacity-30');
+          }
+        }
+      });
+    }
+
+    function toggleNotificationDropdown() {
+      const dropdown = document.getElementById('notificationDropdown');
+      if (!dropdown) return;
+
+      const isHidden = dropdown.classList.contains('hidden') || dropdown.style.display === 'none';
+      if (isHidden) {
+        const dueLeads = leads.filter(l => {
+          const s = getFollowUpStatus(l).type;
+          return s === 'today' || s === 'overdue';
+        });
+
+        const listContainer = document.getElementById('reminderListContainer');
+        if (dueLeads.length === 0) {
+          listContainer.innerHTML = `
+            <div class="p-6 text-center text-xs text-slate-500">
+              <p class="font-semibold text-slate-700">All caught up! 🎉</p>
+              <p class="text-slate-400 mt-1">No pending or overdue reminders right now.</p>
+            </div>
+          `;
+        } else {
+          listContainer.innerHTML = dueLeads.map(l => {
+            const s = getFollowUpStatus(l);
+            return `
+              <div class="p-3 border-b border-slate-100 hover:bg-slate-50 transition flex items-start justify-between gap-2">
+                <div>
+                  <div class="font-bold text-xs text-slate-900">${escapeHtml(l.customerName)}</div>
+                  <div class="text-[11px] text-slate-500">${escapeHtml(l.salesPerson)} &bull; ${escapeHtml(l.area)}</div>
+                  <div class="mt-1">
+                    <span class="inline-block text-[10px] px-1.5 py-0.5 rounded ${s.badgeClass}">${s.label}</span>
+                  </div>
+                </div>
+                <button type="button" onclick="openFollowUpModal('${l.id}'); toggleNotificationDropdown();" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded text-xs font-semibold whitespace-nowrap cursor-pointer">
+                  Action
+                </button>
+              </div>
+            `;
+          }).join('');
+        }
+
+        dropdown.classList.remove('hidden');
+        dropdown.style.display = 'block';
+      } else {
+        dropdown.classList.add('hidden');
+        dropdown.style.display = 'none';
+      }
+    }
+
+    function exportLeadsCSV() {
+      const filtered = getFilteredAndSortedLeads();
+      if (filtered.length === 0) {
+        showToast('No records to export', 'error');
+        return;
+      }
+
+      const headers = [
+        'Lead ID',
+        'Visit Date',
+        'Visit Time',
+        'Customer Name',
+        'Company',
+        'Phone',
+        'Email',
+        'Sales Person',
+        'Area',
+        'Requirement Details',
+        'Category',
+        'Priority',
+        'Status',
+        'Last Follow-up Date',
+        'Last Follow-up Info',
+        'Next Follow-up Date',
+        'Next Follow-up Time',
+        'Reminder Enabled'
+      ];
+
+      const rows = filtered.map(l => [
+        `"${l.id}"`,
+        `"${l.date}"`,
+        `"${l.time || ''}"`,
+        `"${(l.customerName || '').replace(/"/g, '""')}"`,
+        `"${(l.company || '').replace(/"/g, '""')}"`,
+        `"${(l.phone || '').replace(/"/g, '""')}"`,
+        `"${(l.email || '').replace(/"/g, '""')}"`,
+        `"${(l.salesPerson || '').replace(/"/g, '""')}"`,
+        `"${(l.area || '').replace(/"/g, '""')}"`,
+        `"${(l.requirementDetails || '').replace(/"/g, '""')}"`,
+        `"${(l.requirementCategory || '').replace(/"/g, '""')}"`,
+        `"${l.priority}"`,
+        `"${l.status}"`,
+        `"${l.lastFollowUpDate || ''}"`,
+        `"${(l.lastFollowUpInfo || '').replace(/"/g, '""')}"`,
+        `"${l.nextFollowUpDate || ''}"`,
+        `"${l.nextFollowUpTime || ''}"`,
+        l.reminderEnabled ? '"Yes"' : '"No"'
+      ]);
+
+      const csvContent = 'data:text/csv;charset=utf-8,' +
+        [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `LeadFlow_Records_${getTodayString()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast(`Exported ${filtered.length} leads to CSV`, 'success');
+    }
+
+    function resetToSampleData() {
+      if (confirm('Reset CRM to factory demo data with sample visitors, follow-up alerts, and history? This will overwrite your current entries.')) {
+        leads = generateInitialSampleData();
+        salesPersonsList = [...DEFAULT_SALES_PERSONS];
+        areasList = [...DEFAULT_AREAS];
+        saveData();
+        renderFilterDropdowns();
+        renderMainView();
+        showToast('Demo records loaded successfully', 'success');
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      const bgColors = {
+        success: 'bg-emerald-600 text-white',
+        error: 'bg-rose-600 text-white',
+        info: 'bg-slate-900 text-white'
+      };
+
+      const icons = {
+        success: '✓',
+        error: '✕',
+        info: 'ℹ'
+      };
+
+      toast.className = `${bgColors[type] || bgColors.info} px-4 py-3 rounded-lg shadow-xl text-xs font-semibold flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0`;
+      toast.innerHTML = `<span>${icons[type]}</span><span>${escapeHtml(message)}</span>`;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function requestBrowserNotificationPermission() {
+      if (!('Notification' in window)) {
+        showToast('Browser notifications are not supported on this browser', 'info');
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        showToast('Browser notifications are already enabled', 'success');
+        playReminderChime();
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            showToast('Notifications enabled! You will be alerted for follow-ups.', 'success');
+            playReminderChime();
+            new Notification('LeadFlow Pro Active', {
+              body: 'You will receive reminders for scheduled customer follow-ups.'
+            });
+          }
+        });
+      }
+    }
+
+    // Attach all interactive functions explicitly to window for 100% reliable inline HTML execution
+    window.openNewVisitorModal = openNewVisitorModal;
+    window.closeLeadModal = closeLeadModal;
+    window.openFollowUpModal = openFollowUpModal;
+    window.closeFollowUpModal = closeFollowUpModal;
+    window.openViewDetailsModal = openViewDetailsModal;
+    window.closeViewDetailsModal = closeViewDetailsModal;
+    window.confirmDeleteLead = confirmDeleteLead;
+    window.openEditModal = openEditModal;
+    window.setFilterQuick = setFilterQuick;
+    window.resetFilters = resetFilters;
+    window.switchView = switchView;
+    window.handleSort = handleSort;
+    window.promptAddSalesPerson = promptAddSalesPerson;
+    window.promptAddArea = promptAddArea;
+    window.toggleNotificationDropdown = toggleNotificationDropdown;
+    window.exportLeadsCSV = exportLeadsCSV;
+    window.resetToSampleData = resetToSampleData;
+    window.requestBrowserNotificationPermission = requestBrowserNotificationPermission;
+    window.playReminderChime = playReminderChime;
+    window.handleSaveLead = handleSaveLead;
+    window.handleSaveFollowUp = handleSaveFollowUp;
+
+    // Initialization routine
+    function initLeadFlowCRM() {
+      loadData();
+      renderFilterDropdowns();
+      renderMainView();
+      updateSortIcons();
+
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          filters.search = e.target.value;
+          renderMainView();
+        });
+      }
+
+      const dateRangeSelect = document.getElementById('filterDateRange');
+      if (dateRangeSelect) {
+        dateRangeSelect.addEventListener('change', (e) => {
+          filters.dateRange = e.target.value;
+          const customBox = document.getElementById('customDateRangeContainer');
+          if (customBox) {
+            if (e.target.value === 'custom') {
+              customBox.classList.remove('hidden');
+              customBox.style.display = 'flex';
+            } else {
+              customBox.classList.add('hidden');
+              customBox.style.display = 'none';
+            }
+          }
+          renderMainView();
+        });
+      }
+
+      const customStart = document.getElementById('customStartDate');
+      const customEnd = document.getElementById('customEndDate');
+      if (customStart) {
+        customStart.addEventListener('change', (e) => {
+          filters.customStartDate = e.target.value;
+          renderMainView();
+        });
+      }
+      if (customEnd) {
+        customEnd.addEventListener('change', (e) => {
+          filters.customEndDate = e.target.value;
+          renderMainView();
+        });
+      }
+
+      const spFilter = document.getElementById('filterSalesPerson');
+      if (spFilter) {
+        spFilter.addEventListener('change', (e) => {
+          filters.salesPerson = e.target.value;
+          renderMainView();
+        });
+      }
+
+      const areaFilter = document.getElementById('filterArea');
+      if (areaFilter) {
+        areaFilter.addEventListener('change', (e) => {
+          filters.area = e.target.value;
+          renderMainView();
+        });
+      }
+
+      const fuStatusFilter = document.getElementById('filterFollowUpStatus');
+      if (fuStatusFilter) {
+        fuStatusFilter.addEventListener('change', (e) => {
+          filters.followUpStatus = e.target.value;
+          renderMainView();
+        });
+      }
+
+      const statusFilter = document.getElementById('filterStatus');
+      if (statusFilter) {
+        statusFilter.addEventListener('change', (e) => {
+          filters.status = e.target.value;
+          renderMainView();
+        });
+      }
+
+      const priorityFilter = document.getElementById('filterPriority');
+      if (priorityFilter) {
+        priorityFilter.addEventListener('change', (e) => {
+          filters.priority = e.target.value;
+          renderMainView();
+        });
+      }
+
+      const scheduleFUToggle = document.getElementById('scheduleFollowUpToggle');
+      if (scheduleFUToggle) {
+        scheduleFUToggle.addEventListener('change', (e) => {
+          toggleFollowUpSchedulingInputs(e.target.checked);
+        });
+      }
+
+      const fuScheduleNextToggle = document.getElementById('fuScheduleNextToggle');
+      if (fuScheduleNextToggle) {
+        fuScheduleNextToggle.addEventListener('change', (e) => {
+          toggleFuNextSchedulingInputs(e.target.checked);
+        });
+      }
+
+      const leadForm = document.getElementById('leadForm');
+      if (leadForm) {
+        leadForm.addEventListener('submit', handleSaveLead);
+      }
+
+      const followUpForm = document.getElementById('followUpForm');
+      if (followUpForm) {
+        followUpForm.addEventListener('submit', handleSaveFollowUp);
+      }
+
+      document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('notificationDropdown');
+        const bellBtn = document.getElementById('bellBtn');
+        if (dropdown && dropdown.style.display !== 'none' && !dropdown.classList.contains('hidden')) {
+          if (!dropdown.contains(e.target) && !bellBtn.contains(e.target)) {
+            dropdown.classList.add('hidden');
+            dropdown.style.display = 'none';
+          }
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeLeadModal();
+          closeFollowUpModal();
+          closeViewDetailsModal();
+          const dropdown = document.getElementById('notificationDropdown');
+          if (dropdown) {
+            dropdown.classList.add('hidden');
+            dropdown.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    // Execute immediately or on DOM ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initLeadFlowCRM);
+    } else {
+      initLeadFlowCRM();
+    }
+  </script>
 </body>
 </html>
