@@ -43,4 +43,1737 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      min
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fbbf24;
+      font-size: 16px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 5px rgba(79,70,229,0.25);
+    }
+
+    .brand-title-wrap {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .brand-sub {
+      font-size: 13px;
+      font-weight: 800;
+      color: #4f46e5;
+    }
+
+    .brand-pill {
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 10px;
+      line-height: 1.15;
+      max-width: 62px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      position: relative;
+      touch-action: manipulation;
+    }
+
+    .sync-dot {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      border: 1.5px solid #fff;
+    }
+
+    .sync-dot.online {
+      background: #10b981;
+    }
+
+    .notif-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 999px;
+      background: #ef4444;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #ffffff;
+    }
+
+    .notif-badge.show {
+      display: flex;
+    }
+
+    .btn-record {
+      background: linear-gradient(135deg, #4f46e5, #5b21b6);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      line-height: 1.15;
+      text-align: left;
+      box-shadow: 0 2px 6px rgba(79,70,229,0.3);
+      touch-action: manipulation;
+    }
+
+    /* Notification Center Popover */
+    .notif-popover {
+      position: fixed;
+      top: 58px;
+      left: 12px;
+      right: 12px;
+      max-width: 440px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 16px;
+      box-shadow: 0 18px 35px -5px rgba(15, 23, 42, 0.28);
+      padding: 14px;
+      z-index: 9998;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notif-popover.open {
+      display: flex;
+    }
+
+    .notif-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f1f5f9;
+      padding-bottom: 8px;
+      gap: 8px;
+    }
+
+    .notif-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.2px;
+    }
+
+    .notif-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-sound {
+      background: #eef2ff;
+      color: #4f46e5;
+      border: 1px solid #c7d2fe;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .notif-list {
+      max-height: 240px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .notif-item {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 9px 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notif-item-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .notif-item-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      word-break: break-word;
+    }
+
+    .notif-item-meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+      word-break: break-word;
+    }
+
+    .notif-tag {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .notif-tag.overdue {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn-notif-act {
+      background: #eef2ff;
+      color: #4338ca;
+      border: 1px solid #c7d2fe;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      touch-action: manipulation;
+    }
+
+    /* Main Container */
+    .container {
+      width: 100%;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .kpi-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px;
+      position: relative;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+
+    .kpi-card.highlight-due {
+      border: 1.5px solid #f59e0b;
+    }
+
+    .kpi-card.full {
+      grid-column: span 2;
+    }
+
+    .kpi-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: #64748b;
+    }
+
+    .kpi-card.amber .kpi-label, .kpi-card.amber .kpi-num { color: #d97706; }
+    .kpi-card.rose .kpi-label, .kpi-card.rose .kpi-num { color: #dc2626; }
+    .kpi-card.blue .kpi-label, .kpi-card.blue .kpi-num { color: #2563eb; }
+    .kpi-card.emerald .kpi-label, .kpi-card.emerald .kpi-num { color: #059669; }
+
+    .kpi-num {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 4px 0 2px 0;
+      line-height: 1.1;
+    }
+
+    .kpi-sub {
+      font-size: 10px;
+      color: #94a3b8;
+    }
+
+    .kpi-icon {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      font-size: 16px;
+    }
+
+    /* Filter Box */
+    .filter-panel {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 12px;
+      background: #f8fafc;
+      outline: none;
+    }
+
+    .view-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .view-tabs {
+      display: flex;
+      background: #f1f5f9;
+      padding: 3px;
+      border-radius: 10px;
+      flex: 1;
+    }
+
+    .view-tab {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 6px 4px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .view-tab.active {
+      background: #ffffff;
+      color: #4f46e5;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .filter-item label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 4px;
+    }
+
+    .add-link {
+      color: #4f46e5;
+      font-weight: 800;
+      background: none;
+      border: none;
+      font-size: 10px;
+      cursor: pointer;
+      padding: 2px 4px;
+    }
+
+    .select-control {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 11px;
+      background: #f8fafc;
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    /* Lead Cards & Table */
+    .records-area {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lead-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .lead-card.due { border-left: 4px solid #f59e0b; }
+    .lead-card.overdue { border-left: 4px solid #ef4444; }
+
+    .lead-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .lead-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .lead-meta {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .stage-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #fef3c7;
+      color: #b45309;
+      flex-shrink: 0;
+    }
+
+    .stage-badge.Hot { background: #fee2e2; color: #b91c1c; }
+    .stage-badge.Cold { background: #e0f2fe; color: #0369a1; }
+    .stage-badge.Converted { background: #d1fae5; color: #047857; }
+    .stage-badge.Lost { background: #f1f5f9; color: #475569; }
+
+    .req-box {
+      background: #f8fafc;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: #334155;
+    }
+
+    .touch-box {
+      background: #eef2ff;
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 10px;
+      color: #3730a3;
+    }
+
+    .lead-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 2px;
+    }
+
+    .action-btn {
+      padding: 7px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      color: #1e293b;
+      cursor: pointer;
+    }
+
+    .action-btn.primary {
+      grid-column: span 2;
+      background: #eef2ff;
+      color: #4338ca;
+      border-color: #c7d2fe;
+    }
+
+    .action-btn.wa {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+
+    .lead-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 6px;
+    }
+
+    .text-btn {
+      background: none;
+      border: none;
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      cursor: pointer;
+      padding: 3px 6px;
+    }
+
+    .text-btn.danger { color: #dc2626; }
+
+    /* Table View */
+    .table-wrap {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    th, td {
+      padding: 9px 10px;
+      text-align: left;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    th {
+      background: #f8fafc;
+      font-weight: 700;
+      color: #64748b;
+      font-size: 10px;
+      text-transform: uppercase;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 9999;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      padding: 16px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .modal-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .close-btn {
+      background: #f1f5f9;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      color: #475569;
+      cursor: pointer;
+    }
+
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 12px;
+      background: #f8fafc;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: #4f46e5;
+      color: #ffffff;
+      border: none;
+      padding: 11px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 28px 16px;
+      background: #ffffff;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      color: #64748b;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header-bar">
+    <div class="brand-left">
+      <div class="brand-logo">⚡</div>
+      <div class="brand-title-wrap">
+        <span class="brand-name">LeadFlow</span>
+        <span class="brand-sub">Pro</span>
+      </div>
+      <span class="brand-pill">Visitor &amp; Lead CRM</span>
+    </div>
+    <div class="header-right">
+      <button type="button" id="btnDbStatus" class="icon-btn" title="Supabase Connection">
+        📊<span id="syncDot" class="sync-dot"></span>
+      </button>
+      <button type="button" id="btnAlerts" class="icon-btn" title="Reminders">
+        🔔<span id="notifBadge" class="notif-badge">0</span>
+      </button>
+      <button type="button" id="btnNewLead" class="btn-record">
+        <span>+</span>
+        <span>Record<br>Visitor<br>/ Lead</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Viewport-Fitted Notification Center Popover -->
+  <div id="notifPopover" class="notif-popover">
+    <div class="notif-head">
+      <span class="notif-title">FOLLOW-UP REMINDER CENTER</span>
+      <div class="notif-head-actions">
+        <button type="button" id="btnTestSound" class="btn-sound">Test Sound 🔊</button>
+        <button type="button" id="btnCloseNotif" class="close-btn">✕</button>
+      </div>
+    </div>
+    <div id="notifList" class="notif-list"></div>
+  </div>
+
+  <div class="container">
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card" id="cardTotal">
+        <div class="kpi-label">Total Records</div>
+        <div class="kpi-num" id="statTotal">0</div>
+        <div class="kpi-sub">All logged visitors</div>
+        <div class="kpi-icon">📋</div>
+      </div>
+
+      <div class="kpi-card amber highlight-due" id="cardDue">
+        <div class="kpi-label">Due Today</div>
+        <div class="kpi-num" id="statDue">0</div>
+        <div class="kpi-sub">Scheduled for today</div>
+        <div class="kpi-icon">⏰</div>
+      </div>
+
+      <div class="kpi-card rose" id="cardOverdue">
+        <div class="kpi-label">Overdue</div>
+        <div class="kpi-num" id="statOverdue">0</div>
+        <div class="kpi-sub">Needs urgent contact</div>
+        <div class="kpi-icon">⚠️</div>
+      </div>
+
+      <div class="kpi-card blue" id="cardNewWeek">
+        <div class="kpi-label">New This Week</div>
+        <div class="kpi-num" id="statWeek">0</div>
+        <div class="kpi-sub">Recent first inquiries</div>
+        <div class="kpi-icon">✨</div>
+      </div>
+
+      <div class="kpi-card emerald full" id="cardWon">
+        <div class="kpi-label">Converted / Won</div>
+        <div class="kpi-num" id="statWon">0</div>
+        <div class="kpi-sub">Successful closures</div>
+        <div class="kpi-icon">🎯</div>
+      </div>
+    </div>
+
+    <!-- Search & Filters -->
+    <div class="filter-panel">
+      <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search by customer name, phone, area, requirement..." />
+
+      <div class="view-bar">
+        <div class="view-tabs">
+          <button type="button" class="view-tab" data-view="table">📑 Table List</button>
+          <button type="button" class="view-tab active" data-view="cards">🗂️ Cards</button>
+          <button type="button" class="view-tab" data-view="pipeline">📊 Pipeline</button>
+        </div>
+        <button type="button" id="btnResetFilters" class="icon-btn" title="Reset Filters">↺</button>
+      </div>
+
+      <div class="filter-grid">
+        <div class="filter-item">
+          <label>VISIT DATE</label>
+          <select id="filterDateRange" class="select-control">
+            <option value="all">All Dates</option>
+            <option value="7days">Last 7 Days</option>
+            <option value="today">Today</option>
+            <option value="30days">Last 30 Days</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label>
+            <span id="lblSalesPerson">SALES PERSON</span>
+            <button type="button" id="btnAddRep" class="add-link">+ Add</button>
+          </label>
+          <select id="filterRep" class="select-control">
+            <option value="">All Sales Persons</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label>
+            <span id="lblArea">AREA / TERRITORY</span>
+            <button type="button" id="btnAddArea" class="add-link">+ Add</button>
+          </label>
+          <select id="filterArea" class="select-control">
+            <option value="">All Areas</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label>FOLLOW-UP REMINDER</label>
+          <select id="filterReminder" class="select-control">
+            <option value="">All Follow-ups</option>
+            <option value="dueToday">🔔 Due Today</option>
+            <option value="overdue">⚠️ Overdue</option>
+            <option value="upcoming">⏳ Next 7 Days</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label>LEAD STAGE</label>
+          <select id="filterStage" class="select-control">
+            <option value="">All Stages</option>
+            <option value="Hot">🔥 Hot</option>
+            <option value="Warm">☀️ Warm</option>
+            <option value="Cold">❄️ Cold</option>
+            <option value="Converted">✅ Converted</option>
+            <option value="Lost">❌ Lost</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label>PRIORITY</label>
+          <select id="filterPriority" class="select-control">
+            <option value="">All Priorities</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output Container -->
+    <div id="outputContainer" class="records-area"></div>
+  </div>
+
+  <!-- Modal: Record / Edit Visitor -->
+  <div id="visitorModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span class="modal-title" id="visitorModalTitle">Record Visitor / Lead</span>
+        <button type="button" class="close-btn" data-close="visitorModal">✕</button>
+      </div>
+      <form id="visitorForm">
+        <input type="hidden" id="editId" />
+        <div class="row-2">
+          <div class="field">
+            <label>Visit Date *</label>
+            <input type="date" id="fVisitDate" required />
+          </div>
+          <div class="field">
+            <label>Sales Person *</label>
+            <input type="text" id="fSalesPerson" list="repDatalist" required placeholder="Sales Person Name" />
+            <datalist id="repDatalist"></datalist>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Customer Name *</label>
+            <input type="text" id="fCustomerName" required placeholder="Customer Name" />
+          </div>
+          <div class="field">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" id="fPhone" placeholder="10-digit mobile" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Cuttack Area *</label>
+            <select id="fArea" required>
+              <option value="">Select Area (Cuttack)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Lead Stage</label>
+            <select id="fStage">
+              <option value="Hot">🔥 Hot</option>
+              <option value="Warm" selected>☀️ Warm</option>
+              <option value="Cold">❄️ Cold</option>
+              <option value="Converted">✅ Converted</option>
+              <option value="Lost">❌ Lost</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Priority</label>
+            <select id="fPriority">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Next Follow-up Date</label>
+            <input type="date" id="fFollowUpDate" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Follow-up Time</label>
+            <input type="time" id="fFollowUpTime" value="11:00" />
+          </div>
+          <div class="field">
+            <label>Requirement *</label>
+            <input type="text" id="fRequirement" required placeholder="Tiles, Granite, sq ft..." />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Remarks / Notes</label>
+          <textarea id="fRemarks" rows="2" placeholder="Conversation summary, quotes..."></textarea>
+        </div>
+
+        <button type="submit" id="btnSaveVisitor" class="submit-btn">Save Lead Record</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Touchpoint Follow-up -->
+  <div id="touchModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span class="modal-title">Log Follow-up Call</span>
+        <button type="button" class="close-btn" data-close="touchModal">✕</button>
+      </div>
+      <form id="touchForm">
+        <input type="hidden" id="touchLeadId" />
+        <p id="touchLeadLabel" style="font-size:12px; font-weight:700; color:#4f46e5; margin-bottom:10px;"></p>
+
+        <div class="field">
+          <label>Call / Meeting Summary *</label>
+          <textarea id="tNote" rows="3" required placeholder="Customer response, quotation status..."></textarea>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Next Follow-up Date</label>
+            <input type="date" id="tNextDate" />
+          </div>
+          <div class="field">
+            <label>Update Stage</label>
+            <select id="tStage">
+              <option value="Hot">🔥 Hot</option>
+              <option value="Warm">☀️ Warm</option>
+              <option value="Cold">❄️ Cold</option>
+              <option value="Converted">✅ Converted</option>
+              <option value="Lost">❌ Lost</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="btnSaveTouch" class="submit-btn" style="background:#059669;">Save Follow-up</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: PIN Protected Delete Verification (PIN: 3431) -->
+  <div id="pinModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width:320px;">
+      <div class="modal-head">
+        <span class="modal-title">🔒 Confirm Delete Record</span>
+        <button type="button" class="close-btn" data-close="pinModal">✕</button>
+      </div>
+      <form id="pinForm">
+        <input type="hidden" id="deleteTargetId" />
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Enter security PIN to permanently delete this visitor record:</p>
+        <div class="field">
+          <input type="password" id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="4" required placeholder="Enter 4-digit PIN" style="text-align:center; font-size:18px; letter-spacing:6px; font-weight:800;" />
+        </div>
+        <p id="pinError" style="color:#dc2626; font-size:11px; font-weight:700; margin-bottom:8px; display:none;">❌ Incorrect PIN. Deletion cancelled.</p>
+        <button type="submit" class="submit-btn" style="background:#dc2626;">Verify &amp; Delete</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Supabase Cloud Setup -->
+  <div id="dbModal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span class="modal-title">Supabase Cloud Sync</span>
+        <button type="button" class="close-btn" data-close="dbModal">✕</button>
+      </div>
+      <div id="dbStatusBanner" style="font-size:11px; padding:8px 10px; border-radius:8px; background:#f1f5f9; margin-bottom:10px;">
+        Checking connection...
+      </div>
+      <form id="dbForm">
+        <div class="field">
+          <label>Supabase Project URL</label>
+          <input type="url" id="dbUrl" required />
+        </div>
+        <div class="field">
+          <label>Supabase Anon Key</label>
+          <textarea id="dbKey" rows="3" required style="font-family:monospace; font-size:10px;"></textarea>
+        </div>
+        <div class="row-2">
+          <button type="button" id="btnTestDb" class="submit-btn" style="background:#0284c7;">Test Ping</button>
+          <button type="submit" class="submit-btn">Save &amp; Sync</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Quick Add Rep / Cuttack Area -->
+  <div id="quickAddModal" class="modal-backdrop">
+    <div class="modal-box" style="max-width:340px;">
+      <div class="modal-head">
+        <span class="modal-title" id="quickAddTitle">Add New Item</span>
+        <button type="button" class="close-btn" data-close="quickAddModal">✕</button>
+      </div>
+      <form id="quickAddForm">
+        <input type="hidden" id="quickAddType" />
+        <div class="field">
+          <label id="quickAddLabel">Name *</label>
+          <input type="text" id="quickAddInput" required placeholder="Enter name..." />
+        </div>
+        <button type="submit" class="submit-btn">Add to List</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      var DEFAULT_URL = "https://adsczhoqmnxvjxgbqvq.supabase.co";
+      var DEFAULT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkc2N6aG9xam1ueHZqeGdicXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNTMyNzUsImV4cCI6MjEwODgyOTI3NX0.DhEJ1tV1O2EJCHt0EL8402CwNRq1UXUkHnqITh4xDkM";
+      var DELETE_PIN = "3431";
+
+      var CUTTACK_AREAS = [
+        "CDA Sector 1-6",
+        "CDA Sector 7-11",
+        "Bidanasi",
+        "Badambadi",
+        "College Square",
+        "Ranihat",
+        "Buxi Bazar",
+        "Choudhury Bazar",
+        "Naya Sadak",
+        "Link Road",
+        "Madhupatna",
+        "Chauliaganj",
+        "Mahanadi Vihar",
+        "Nayabazar",
+        "Jobra",
+        "Tulasipur",
+        "Cantonment Road",
+        "Bidyadharpur",
+        "Jagatpur",
+        "Phulnakhara (Cuttack Side)",
+        "Cuttack Sadar"
+      ];
+
+      var records = [];
+      var customReps = ["Vinit Mantry", "Punit Mantry"];
+      var customAreas = CUTTACK_AREAS.slice();
+      var currentView = "cards";
+      var isCloudConnected = false;
+
+      var store = {
+        get: function(k, fallback) {
+          try {
+            var v = window.localStorage.getItem(k);
+            return v !== null ? v : fallback;
+          } catch (e) {
+            return fallback;
+          }
+        },
+        set: function(k, v) {
+          try {
+            window.localStorage.setItem(k, v);
+          } catch (e) {}
+        }
+      };
+
+      try {
+        var rSaved = store.get("lf_reps", null);
+        if (rSaved) customReps = JSON.parse(rSaved);
+        var aSaved = store.get("lf_cuttack_areas", null);
+        if (aSaved) customAreas = JSON.parse(aSaved);
+      } catch (e) {}
+
+      function getUrl() { return store.get("lf_sb_url", DEFAULT_URL); }
+      function getKey() { return store.get("lf_sb_key", DEFAULT_KEY); }
+      function todayStr() { return new Date().toISOString().split("T")[0]; }
+
+      function openModal(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add("open");
+      }
+
+      function closeModal(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.remove("open");
+      }
+
+      function playChime() {
+        try {
+          var ctx = new (window.AudioContext || window.webkitAudioContext)();
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(880, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(587.33, ctx.currentTime + 0.25);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.35);
+        } catch (e) {}
+      }
+
+      function syncDropdowns() {
+        var repMap = {};
+        var areaMap = {};
+        customReps.forEach(function(x) { if (x) repMap[x] = true; });
+        customAreas.forEach(function(x) { if (x) areaMap[x] = true; });
+        records.forEach(function(r) {
+          if (r.salesPerson) repMap[r.salesPerson] = true;
+        });
+
+        var repKeys = Object.keys(repMap);
+        var filterRep = document.getElementById("filterRep");
+        var curRep = filterRep.value;
+        filterRep.innerHTML = '<option value="">All Sales Persons (' + repKeys.length + ')</option>';
+        var repList = document.getElementById("repDatalist");
+        repList.innerHTML = "";
+
+        repKeys.forEach(function(rep) {
+          var opt = document.createElement("option");
+          opt.value = rep;
+          opt.textContent = rep;
+          filterRep.appendChild(opt);
+
+          var dOpt = document.createElement("option");
+          dOpt.value = rep;
+          repList.appendChild(dOpt);
+        });
+        filterRep.value = curRep;
+
+        var areaKeys = Object.keys(areaMap);
+        var filterArea = document.getElementById("filterArea");
+        var curArea = filterArea.value;
+        filterArea.innerHTML = '<option value="">All Areas (' + areaKeys.length + ')</option>';
+
+        var formArea = document.getElementById("fArea");
+        var curFormArea = formArea.value;
+        formArea.innerHTML = '<option value="">Select Area (Cuttack)</option>';
+
+        areaKeys.forEach(function(area) {
+          var opt = document.createElement("option");
+          opt.value = area;
+          opt.textContent = area;
+          filterArea.appendChild(opt);
+
+          var fOpt = document.createElement("option");
+          fOpt.value = area;
+          fOpt.textContent = area;
+          formArea.appendChild(fOpt);
+        });
+        filterArea.value = curArea;
+        formArea.value = curFormArea;
+      }
+
+      async function fetchRecords() {
+        var dot = document.getElementById("syncDot");
+        try {
+          var res = await fetch(getUrl() + "/rest/v1/visitors?select=*&order=created_at.desc", {
+            method: "GET",
+            headers: {
+              "apikey": getKey(),
+              "Authorization": "Bearer " + getKey(),
+              "Accept": "application/json"
+            }
+          });
+          if (res.ok) {
+            var data = await res.json();
+            records = data.map(function(r) {
+              return {
+                id: r.id,
+                visitDate: r.visit_date || todayStr(),
+                salesPerson: r.sales_person || "",
+                customerName: r.customer_name || "",
+                phone: r.customer_phone || "",
+                area: r.area || "",
+                stage: r.status || "Warm",
+                priority: r.priority || "Medium",
+                requirement: r.requirement || "",
+                followUpDate: r.follow_up_date || "",
+                followUpTime: r.follow_up_time || "11:00",
+                remarks: r.remarks || "",
+                lastTouchDate: r.last_follow_up_date || "",
+                lastTouchNote: r.last_follow_up_remarks || ""
+              };
+            });
+            isCloudConnected = true;
+            dot.classList.add("online");
+            store.set("lf_records_cache", JSON.stringify(records));
+            syncDropdowns();
+            render();
+            return;
+          }
+        } catch (e) {}
+
+        isCloudConnected = false;
+        dot.classList.remove("online");
+        try {
+          records = JSON.parse(store.get("lf_records_cache", "[]"));
+        } catch (e) {
+          records = [];
+        }
+        syncDropdowns();
+        render();
+      }
+
+      function render() {
+        var today = todayStr();
+        var weekAgo = new Date(Date.now() - 7 * 86400000).toISOString().split("T")[0];
+
+        var dueList = records.filter(function(r) {
+          return r.followUpDate === today && r.stage !== "Converted" && r.stage !== "Lost";
+        });
+        var overdueList = records.filter(function(r) {
+          return r.followUpDate && r.followUpDate < today && r.stage !== "Converted" && r.stage !== "Lost";
+        });
+        var weekList = records.filter(function(r) {
+          return r.visitDate >= weekAgo;
+        });
+        var wonList = records.filter(function(r) {
+          return r.stage === "Converted";
+        });
+
+        document.getElementById("statTotal").textContent = records.length;
+        document.getElementById("statDue").textContent = dueList.length;
+        document.getElementById("statOverdue").textContent = overdueList.length;
+        document.getElementById("statWeek").textContent = weekList.length;
+        document.getElementById("statWon").textContent = wonList.length;
+
+        var totalAlerts = dueList.length + overdueList.length;
+        var badge = document.getElementById("notifBadge");
+        if (totalAlerts > 0) {
+          badge.textContent = totalAlerts;
+          badge.classList.add("show");
+        } else {
+          badge.classList.remove("show");
+        }
+
+        var notifListEl = document.getElementById("notifList");
+        var combinedAlerts = overdueList.concat(dueList);
+        if (combinedAlerts.length === 0) {
+          notifListEl.innerHTML = '<div style="text-align:center; padding:16px; font-size:12px; color:#64748b;">No follow-ups due today or overdue.</div>';
+        } else {
+          notifListEl.innerHTML = combinedAlerts.map(function(r) {
+            var isOver = r.followUpDate < today;
+            var tagText = isOver
+              ? ('OVERDUE (' + escapeHtml(r.followUpDate) + ')')
+              : ('DUE TODAY @ ' + escapeHtml(r.followUpTime || '11:00'));
+            return '<div class="notif-item">' +
+              '<div class="notif-item-info">' +
+                '<div class="notif-item-name">' + escapeHtml(r.customerName) + '</div>' +
+                '<div class="notif-item-meta">' + escapeHtml(r.salesPerson || 'Rep') + ' • ' + escapeHtml(r.area || 'Cuttack') + '</div>' +
+                '<span class="notif-tag ' + (isOver ? 'overdue' : '') + '">' + tagText + '</span>' +
+              '</div>' +
+              '<button type="button" class="btn-notif-act" data-action="touch" data-id="' + r.id + '">Action</button>' +
+            '</div>';
+          }).join("");
+        }
+
+        var q = document.getElementById("searchInput").value.trim().toLowerCase();
+        var fDate = document.getElementById("filterDateRange").value;
+        var fRep = document.getElementById("filterRep").value;
+        var fArea = document.getElementById("filterArea").value;
+        var fRem = document.getElementById("filterReminder").value;
+        var fStage = document.getElementById("filterStage").value;
+        var fPrio = document.getElementById("filterPriority").value;
+
+        var filtered = records.filter(function(r) {
+          if (q) {
+            var hay = (r.customerName + " " + r.phone + " " + r.area + " " + r.salesPerson + " " + r.requirement).toLowerCase();
+            if (hay.indexOf(q) === -1) return false;
+          }
+          if (fDate === "today" && r.visitDate !== today) return false;
+          if (fDate === "7days" && r.visitDate < weekAgo) return false;
+          if (fDate === "30days") {
+            var d30 = new Date(Date.now() - 30 * 86400000).toISOString().split("T")[0];
+            if (r.visitDate < d30) return false;
+          }
+          if (fRep && r.salesPerson !== fRep) return false;
+          if (fArea && r.area !== fArea) return false;
+          if (fStage && r.stage !== fStage) return false;
+          if (fPrio && r.priority !== fPrio) return false;
+
+          if (fRem === "dueToday" && r.followUpDate !== today) return false;
+          if (fRem === "overdue" && !(r.followUpDate && r.followUpDate < today && r.stage !== "Converted" && r.stage !== "Lost")) return false;
+          if (fRem === "upcoming") {
+            var next7 = new Date(Date.now() + 7 * 86400000).toISOString().split("T")[0];
+            if (!(r.followUpDate >= today && r.followUpDate <= next7)) return false;
+          }
+          return true;
+        });
+
+        var container = document.getElementById("outputContainer");
+        if (filtered.length === 0) {
+          container.innerHTML = '<div class="empty-state">No visitor records match your current view.<br><br>Tap <strong>+ Record Visitor / Lead</strong> at the top right to log a customer.</div>';
+          return;
+        }
+
+        if (currentView === "table") {
+          var rows = filtered.map(function(r) {
+            return '<tr>' +
+              '<td><strong>' + escapeHtml(r.customerName) + '</strong><br><span style="color:#64748b;font-size:10px;">' + escapeHtml(r.area || "Cuttack") + '</span></td>' +
+              '<td><span class="stage-badge ' + escapeHtml(r.stage) + '">' + escapeHtml(r.stage) + '</span></td>' +
+              '<td>' + escapeHtml(r.followUpDate || "None") + '</td>' +
+              '<td><button type="button" class="text-btn" data-action="edit" data-id="' + r.id + '">Edit</button></td>' +
+            '</tr>';
+          }).join("");
+          container.innerHTML = '<div class="table-wrap"><table><thead><tr><th>Customer</th><th>Stage</th><th>Follow-Up</th><th>Action</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+          return;
+        }
+
+        container.innerHTML = filtered.map(function(r) {
+          var isDue = r.followUpDate === today;
+          var isOver = r.followUpDate && r.followUpDate < today && r.stage !== "Converted" && r.stage !== "Lost";
+          var cls = "lead-card" + (isDue ? " due" : "") + (isOver ? " overdue" : "");
+          var cleanPhone = (r.phone || "").replace(/[^0-9]/g, "");
+
+          var phoneBtns = cleanPhone ? (
+            '<a href="tel:' + cleanPhone + '" class="action-btn">📞 Call</a>' +
+            '<a href="https://wa.me/91' + cleanPhone + '?text=' + encodeURIComponent("Hello " + r.customerName + ", following up from Maheswari Stones & Ceramics regarding: " + r.requirement) + '" target="_blank" class="action-btn wa">💬 WhatsApp</a>'
+          ) : "";
+
+          var touchHtml = r.lastTouchDate ? (
+            '<div class="touch-box"><strong>Last Call (' + escapeHtml(r.lastTouchDate) + '):</strong> ' + escapeHtml(r.lastTouchNote) + '</div>'
+          ) : "";
+
+          return '<div class="' + cls + '">' +
+            '<div class="lead-top">' +
+              '<div>' +
+                '<div class="lead-name">' + escapeHtml(r.customerName) + '</div>' +
+                '<div class="lead-meta">📍 ' + escapeHtml(r.area || "Cuttack") + ' • Rep: <strong>' + escapeHtml(r.salesPerson) + '</strong></div>' +
+              '</div>' +
+              '<span class="stage-badge ' + escapeHtml(r.stage) + '">' + escapeHtml(r.stage) + '</span>' +
+            '</div>' +
+            '<div class="req-box">' + escapeHtml(r.requirement) + '</div>' +
+            touchHtml +
+            '<div class="lead-meta">⏰ Follow-up: <strong>' + escapeHtml(r.followUpDate || "Not set") + (r.followUpDate && r.followUpTime ? (' @ ' + escapeHtml(r.followUpTime)) : '') + '</strong> • Priority: ' + escapeHtml(r.priority) + '</div>' +
+            '<div class="lead-actions">' +
+              '<button type="button" class="action-btn primary" data-action="touch" data-id="' + r.id + '">📞 Log Follow-up Call</button>' +
+              phoneBtns +
+            '</div>' +
+            '<div class="lead-footer">' +
+              '<button type="button" class="text-btn" data-action="edit" data-id="' + r.id + '">✏️ Edit</button>' +
+              '<button type="button" class="text-btn danger" data-action="del" data-id="' + r.id + '">🗑️ Delete</button>' +
+            '</div>' +
+          '</div>';
+        }).join("");
+      }
+
+      function escapeHtml(str) {
+        return String(str || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      function openVisitorForm(id) {
+        document.getElementById("visitorForm").reset();
+        document.getElementById("editId").value = "";
+        document.getElementById("fVisitDate").value = todayStr();
+        document.getElementById("fFollowUpTime").value = "11:00";
+        document.getElementById("visitorModalTitle").textContent = "Record Visitor / Lead";
+
+        if (id) {
+          var item = records.find(function(r) { return r.id === id; });
+          if (item) {
+            document.getElementById("visitorModalTitle").textContent = "Edit Visitor / Lead";
+            document.getElementById("editId").value = item.id;
+            document.getElementById("fVisitDate").value = item.visitDate;
+            document.getElementById("fSalesPerson").value = item.salesPerson;
+            document.getElementById("fCustomerName").value = item.customerName;
+            document.getElementById("fPhone").value = item.phone;
+            document.getElementById("fArea").value = item.area;
+            document.getElementById("fStage").value = item.stage;
+            document.getElementById("fPriority").value = item.priority;
+            document.getElementById("fFollowUpDate").value = item.followUpDate;
+            document.getElementById("fFollowUpTime").value = item.followUpTime || "11:00";
+            document.getElementById("fRequirement").value = item.requirement;
+            document.getElementById("fRemarks").value = item.remarks;
+          }
+        }
+        openModal("visitorModal");
+      }
+
+      function openTouchForm(id) {
+        var item = records.find(function(r) { return r.id === id; });
+        if (!item) return;
+        document.getElementById("notifPopover").classList.remove("open");
+        document.getElementById("touchForm").reset();
+        document.getElementById("touchLeadId").value = item.id;
+        document.getElementById("touchLeadLabel").textContent = item.customerName + " (" + (item.area || "Cuttack") + ")";
+        document.getElementById("tStage").value = item.stage;
+        openModal("touchModal");
+      }
+
+      function openPinDeleteModal(id) {
+        document.getElementById("pinForm").reset();
+        document.getElementById("deleteTargetId").value = id;
+        document.getElementById("pinError").style.display = "none";
+        openModal("pinModal");
+        setTimeout(function() {
+          var inp = document.getElementById("pinInput");
+          if (inp) inp.focus();
+        }, 100);
+      }
+
+      document.addEventListener("click", function(e) {
+        var target = e.target;
+
+        if (target.closest("#btnNewLead")) {
+          document.getElementById("notifPopover").classList.remove("open");
+          openVisitorForm(null);
+          return;
+        }
+        if (target.closest("#btnDbStatus")) {
+          document.getElementById("notifPopover").classList.remove("open");
+          document.getElementById("dbUrl").value = getUrl();
+          document.getElementById("dbKey").value = getKey();
+          var st = document.getElementById("dbStatusBanner");
+          st.textContent = isCloudConnected ? "✅ Connected to Supabase Cloud" : "⚠️ Offline / Local Storage Mode";
+          st.style.background = isCloudConnected ? "#d1fae5" : "#fef3c7";
+          st.style.color = isCloudConnected ? "#065f46" : "#92400e";
+          openModal("dbModal");
+          return;
+        }
+        if (target.closest("#btnAlerts")) {
+          document.getElementById("notifPopover").classList.toggle("open");
+          return;
+        }
+        if (target.closest("#btnCloseNotif")) {
+          document.getElementById("notifPopover").classList.remove("open");
+          return;
+        }
+        if (target.closest("#btnTestSound")) {
+          playChime();
+          return;
+        }
+
+        if (!target.closest("#notifPopover") && !target.closest("#btnAlerts")) {
+          document.getElementById("notifPopover").classList.remove("open");
+        }
+
+        var closeBtn = target.closest(".close-btn");
+        if (closeBtn) {
+          closeModal(closeBtn.getAttribute("data-close"));
+          return;
+        }
+        if (target.classList && target.classList.contains("modal-backdrop")) {
+          target.classList.remove("open");
+          return;
+        }
+
+        var tab = target.closest(".view-tab");
+        if (tab) {
+          document.querySelectorAll(".view-tab").forEach(function(t) { t.classList.remove("active"); });
+          tab.classList.add("active");
+          currentView = tab.getAttribute("data-view");
+          render();
+          return;
+        }
+
+        if (target.closest("#cardTotal")) {
+          document.getElementById("filterDateRange").value = "all";
+          document.getElementById("filterReminder").value = "";
+          document.getElementById("filterStage").value = "";
+          render();
+          return;
+        }
+        if (target.closest("#cardDue")) {
+          document.getElementById("filterReminder").value = "dueToday";
+          render();
+          return;
+        }
+        if (target.closest("#cardOverdue")) {
+          document.getElementById("filterReminder").value = "overdue";
+          render();
+          return;
+        }
+        if (target.closest("#cardNewWeek")) {
+          document.getElementById("filterDateRange").value = "7days";
+          render();
+          return;
+        }
+        if (target.closest("#cardWon")) {
+          document.getElementById("filterStage").value = "Converted";
+          render();
+          return;
+        }
+
+        if (target.closest("#btnResetFilters")) {
+          document.getElementById("searchInput").value = "";
+          document.getElementById("filterDateRange").value = "all";
+          document.getElementById("filterRep").value = "";
+          document.getElementById("filterArea").value = "";
+          document.getElementById("filterReminder").value = "";
+          document.getElementById("filterStage").value = "";
+          document.getElementById("filterPriority").value = "";
+          render();
+          return;
+        }
+
+        if (target.closest("#btnAddRep")) {
+          document.getElementById("quickAddType").value = "rep";
+          document.getElementById("quickAddTitle").textContent = "Add Sales Person";
+          document.getElementById("quickAddLabel").textContent = "Sales Person Name *";
+          document.getElementById("quickAddInput").value = "";
+          openModal("quickAddModal");
+          return;
+        }
+        if (target.closest("#btnAddArea")) {
+          document.getElementById("quickAddType").value = "area";
+          document.getElementById("quickAddTitle").textContent = "Add Cuttack Area";
+          document.getElementById("quickAddLabel").textContent = "Area Name (Cuttack, Odisha) *";
+          document.getElementById("quickAddInput").value = "";
+          openModal("quickAddModal");
+          return;
+        }
+
+        if (target.closest("#btnTestDb")) {
+          var st = document.getElementById("dbStatusBanner");
+          st.textContent = "Pinging Supabase...";
+          fetch(document.getElementById("dbUrl").value.trim() + "/rest/v1/visitors?select=id&limit=1", {
+            headers: {
+              "apikey": document.getElementById("dbKey").value.trim(),
+              "Authorization": "Bearer " + document.getElementById("dbKey").value.trim()
+            }
+          }).then(function(res) {
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            st.style.background = "#d1fae5";
+            st.style.color = "#065f46";
+            st.textContent = "✅ Connected! Table visitors is live.";
+          }).catch(function(err) {
+            st.style.background = "#fee2e2";
+            st.style.color = "#b91c1c";
+            st.textContent = "❌ Connection failed: " + err.message;
+          });
+          return;
+        }
+
+        var actionEl = target.closest("[data-action]");
+        if (actionEl) {
+          var act = actionEl.getAttribute("data-action");
+          var id = actionEl.getAttribute("data-id");
+          if (act === "edit") {
+            openVisitorForm(id);
+          } else if (act === "touch") {
+            openTouchForm(id);
+          } else if (act === "del") {
+            openPinDeleteModal(id);
+          }
+          return;
+        }
+      });
+
+      document.getElementById("pinForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        var entered = document.getElementById("pinInput").value.trim();
+        var errBox = document.getElementById("pinError");
+        if (entered !== DELETE_PIN) {
+          errBox.style.display = "block";
+          document.getElementById("pinInput").value = "";
+          return;
+        }
+
+        var id = document.getElementById("deleteTargetId").value;
+        try {
+          await fetch(getUrl() + "/rest/v1/visitors?id=eq." + encodeURIComponent(id), {
+            method: "DELETE",
+            headers: {
+              "apikey": getKey(),
+              "Authorization": "Bearer " + getKey()
+            }
+          });
+        } catch (err) {}
+
+        records = records.filter(function(r) { return r.id !== id; });
+        store.set("lf_records_cache", JSON.stringify(records));
+        closeModal("pinModal");
+        render();
+      });
+
+      ["searchInput", "filterDateRange", "filterRep", "filterArea", "filterReminder", "filterStage", "filterPriority"].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener(id === "searchInput" ? "input" : "change", render);
+      });
+
+      document.getElementById("quickAddForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        var type = document.getElementById("quickAddType").value;
+        var val = document.getElementById("quickAddInput").value.trim();
+        if (!val) return;
+        if (type === "rep") {
+          if (customReps.indexOf(val) === -1) customReps.push(val);
+          store.set("lf_reps", JSON.stringify(customReps));
+          syncDropdowns();
+          document.getElementById("filterRep").value = val;
+        } else {
+          if (customAreas.indexOf(val) === -1) customAreas.push(val);
+          store.set("lf_cuttack_areas", JSON.stringify(customAreas));
+          syncDropdowns();
+          document.getElementById("filterArea").value = val;
+        }
+        closeModal("quickAddModal");
+        render();
+      });
+
+      document.getElementById("visitorForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        var btn = document.getElementById("btnSaveVisitor");
+        btn.textContent = "Saving...";
+        btn.disabled = true;
+
+        var id = document.getElementById("editId").value || ("lead_" + Date.now());
+        var payload = {
+          id: id,
+          visit_date: document.getElementById("fVisitDate").value,
+          sales_person: document.getElementById("fSalesPerson").value.trim(),
+          customer_name: document.getElementById("fCustomerName").value.trim(),
+          customer_phone: document.getElementById("fPhone").value.trim(),
+          area: document.getElementById("fArea").value.trim(),
+          status: document.getElementById("fStage").value,
+          priority: document.getElementById("fPriority").value,
+          requirement: document.getElementById("fRequirement").value.trim(),
+          follow_up_date: document.getElementById("fFollowUpDate").value || null,
+          follow_up_time: document.getElementById("fFollowUpTime").value || "11:00",
+          remarks: document.getElementById("fRemarks").value.trim()
+        };
+
+        try {
+          await fetch(getUrl() + "/rest/v1/visitors", {
+            method: "POST",
+            headers: {
+              "apikey": getKey(),
+              "Authorization": "Bearer " + getKey(),
+              "Content-Type": "application/json",
+              "Prefer": "resolution=merge-duplicates,return=minimal"
+            },
+            body: JSON.stringify(payload)
+          });
+        } catch (err) {}
+
+        var localObj = {
+          id: id,
+          visitDate: payload.visit_date,
+          salesPerson: payload.sales_person,
+          customerName: payload.customer_name,
+          phone: payload.customer_phone,
+          area: payload.area,
+          stage: payload.status,
+          priority: payload.priority,
+          requirement: payload.requirement,
+          followUpDate: payload.follow_up_date || "",
+          followUpTime: payload.follow_up_time || "11:00",
+          remarks: payload.remarks,
+          lastTouchDate: "",
+          lastTouchNote: ""
+        };
+
+        var idx = records.findIndex(function(r) { return r.id === id; });
+        if (idx > -1) {
+          localObj.lastTouchDate = records[idx].lastTouchDate;
+          localObj.lastTouchNote = records[idx].lastTouchNote;
+          records[idx] = localObj;
+        } else {
+          records.unshift(localObj);
+        }
+
+        store.set("lf_records_cache", JSON.stringify(records));
+        btn.textContent = "Save Lead Record";
+        btn.disabled = false;
+        closeModal("visitorModal");
+        syncDropdowns();
+        render();
+      });
+
+      document.getElementById("touchForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+        var btn = document.getElementById("btnSaveTouch");
+        btn.textContent = "Updating...";
+        btn.disabled = true;
+
+        var id = document.getElementById("touchLeadId").value;
+        var today = todayStr();
+        var note = document.getElementById("tNote").value.trim();
+        var nextDate = document.getElementById("tNextDate").value || null;
+        var stage = document.getElementById("tStage").value;
+
+        try {
+          await fetch(getUrl() + "/rest/v1/visitors?id=eq." + encodeURIComponent(id), {
+            method: "PATCH",
+            headers: {
+              "apikey": getKey(),
+              "Authorization": "Bearer " + getKey(),
+              "Content-Type": "application/json",
+              "Prefer": "return=minimal"
+            },
+            body: JSON.stringify({
+              last_follow_up_date: today,
+              last_follow_up_remarks: note,
+              follow_up_date: nextDate,
+              status: stage
+            })
+          });
+        } catch (err) {}
+
+        var item = records.find(function(r) { return r.id === id; });
+        if (item) {
+          item.lastTouchDate = today;
+          item.lastTouchNote = note;
+          item.followUpDate = nextDate || "";
+          item.stage = stage;
+        }
+
+        store.set("lf_records_cache", JSON.stringify(records));
+        btn.textContent = "Save Follow-up";
+        btn.disabled = false;
+        closeModal("touchModal");
+        render();
+      });
+
+      document.getElementById("dbForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        store.set("lf_sb_url", document.getElementById("dbUrl").value.trim());
+        store.set("lf_sb_key", document.getElementById("dbKey").value.trim());
+        closeModal("dbModal");
+        fetchRecords();
+      });
+
+      syncDropdowns();
+      render();
+      fetchRecords();
+    })();
+  </script>
+</body>
+</html>
