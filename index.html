@@ -632,6 +632,114 @@
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
     }
 
+    /* Full-Screen High-Visibility Entry Modal for Customer Data */
+    .modal-backdrop.fullscreen-modal {
+      padding: 0;
+      background: #ffffff;
+      align-items: stretch;
+      justify-content: stretch;
+    }
+
+    .modal-backdrop.fullscreen-modal .modal-box {
+      max-width: 100%;
+      width: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      border-radius: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      box-shadow: none;
+    }
+
+    .fullscreen-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #4f46e5;
+      color: #ffffff;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    }
+
+    .fullscreen-header .modal-title {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .fullscreen-header .close-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+
+    .fullscreen-body {
+      padding: 18px 16px 40px 16px;
+      flex: 1;
+      overflow-y: auto;
+      background: #f8fafc;
+    }
+
+    .fullscreen-body .field {
+      margin-bottom: 16px;
+    }
+
+    .fullscreen-body .field label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    .fullscreen-body .field input,
+    .fullscreen-body .field select,
+    .fullscreen-body .field textarea {
+      font-size: 16px;
+      padding: 13px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 600;
+      min-height: 48px;
+    }
+
+    .fullscreen-body .field input:focus,
+    .fullscreen-body .field select:focus,
+    .fullscreen-body .field textarea:focus {
+      border-color: #4f46e5;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+    }
+
+    .fullscreen-body .row-2 {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    @media (min-width: 560px) {
+      .fullscreen-body .row-2 {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+    }
+
+    .fullscreen-body .submit-btn {
+      font-size: 16px;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
     .modal-head {
       display: flex;
       justify-content: space-between;
@@ -869,90 +977,92 @@
     <div id="outputContainer" class="records-area"></div>
   </div>
 
-  <!-- Modal: Record / Edit Visitor -->
-  <div id="visitorModal" class="modal-backdrop">
+  <!-- Full-Screen Large-Visibility Modal: Record / Edit Visitor -->
+  <div id="visitorModal" class="modal-backdrop fullscreen-modal">
     <div class="modal-box">
-      <div class="modal-head">
+      <div class="fullscreen-header">
         <span class="modal-title" id="visitorModalTitle">Record Visitor / Lead</span>
         <button type="button" class="close-btn" data-close="visitorModal">✕</button>
       </div>
-      <form id="visitorForm">
-        <input type="hidden" id="editId" />
-        <div class="row-2">
-          <div class="field">
-            <label>Visit Date *</label>
-            <input type="date" id="fVisitDate" required />
+      <div class="fullscreen-body">
+        <form id="visitorForm">
+          <input type="hidden" id="editId" />
+          <div class="row-2">
+            <div class="field">
+              <label>Visit Date *</label>
+              <input type="date" id="fVisitDate" required />
+            </div>
+            <div class="field">
+              <label>Sales Person *</label>
+              <input type="text" id="fSalesPerson" list="repDatalist" required placeholder="Enter Sales Person Name" />
+              <datalist id="repDatalist"></datalist>
+            </div>
           </div>
-          <div class="field">
-            <label>Sales Person *</label>
-            <input type="text" id="fSalesPerson" list="repDatalist" required placeholder="Sales Person Name" />
-            <datalist id="repDatalist"></datalist>
-          </div>
-        </div>
 
-        <div class="row-2">
-          <div class="field">
-            <label>Customer Name *</label>
-            <input type="text" id="fCustomerName" required placeholder="Customer Name" />
+          <div class="row-2">
+            <div class="field">
+              <label>Customer Name *</label>
+              <input type="text" id="fCustomerName" required placeholder="Enter Customer Full Name" />
+            </div>
+            <div class="field">
+              <label>Phone / WhatsApp</label>
+              <input type="tel" id="fPhone" inputmode="tel" placeholder="10-digit mobile number" />
+            </div>
           </div>
-          <div class="field">
-            <label>Phone / WhatsApp</label>
-            <input type="tel" id="fPhone" placeholder="10-digit mobile" />
-          </div>
-        </div>
 
-        <div class="row-2">
-          <div class="field">
-            <label>Cuttack Area *</label>
-            <select id="fArea" required>
-              <option value="">Select Area (Cuttack)</option>
-            </select>
+          <div class="row-2">
+            <div class="field">
+              <label>Cuttack Area *</label>
+              <select id="fArea" required>
+                <option value="">Select Area (Cuttack)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Lead Stage</label>
+              <select id="fStage">
+                <option value="Hot">🔥 Hot</option>
+                <option value="Warm" selected>☀️ Warm</option>
+                <option value="Cold">❄️ Cold</option>
+                <option value="Converted">✅ Converted</option>
+                <option value="Lost">❌ Lost</option>
+              </select>
+            </div>
           </div>
-          <div class="field">
-            <label>Lead Stage</label>
-            <select id="fStage">
-              <option value="Hot">🔥 Hot</option>
-              <option value="Warm" selected>☀️ Warm</option>
-              <option value="Cold">❄️ Cold</option>
-              <option value="Converted">✅ Converted</option>
-              <option value="Lost">❌ Lost</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="row-2">
-          <div class="field">
-            <label>Priority</label>
-            <select id="fPriority">
-              <option value="High">High</option>
-              <option value="Medium" selected>Medium</option>
-              <option value="Low">Low</option>
-            </select>
+          <div class="row-2">
+            <div class="field">
+              <label>Priority</label>
+              <select id="fPriority">
+                <option value="High">High</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Next Follow-up Date</label>
+              <input type="date" id="fFollowUpDate" />
+            </div>
           </div>
-          <div class="field">
-            <label>Next Follow-up Date</label>
-            <input type="date" id="fFollowUpDate" />
-          </div>
-        </div>
 
-        <div class="row-2">
-          <div class="field">
-            <label>Follow-up Time</label>
-            <input type="time" id="fFollowUpTime" value="11:00" />
+          <div class="row-2">
+            <div class="field">
+              <label>Follow-up Time</label>
+              <input type="time" id="fFollowUpTime" value="11:00" />
+            </div>
+            <div class="field">
+              <label>Material Requirement *</label>
+              <input type="text" id="fRequirement" required placeholder="e.g. 4x2 GVT Tiles, Granite, sq ft..." />
+            </div>
           </div>
+
           <div class="field">
-            <label>Requirement *</label>
-            <input type="text" id="fRequirement" required placeholder="Tiles, Granite, sq ft..." />
+            <label>Remarks / Notes</label>
+            <textarea id="fRemarks" rows="3" placeholder="Conversation summary, rates quoted, sample details..."></textarea>
           </div>
-        </div>
 
-        <div class="field">
-          <label>Remarks / Notes</label>
-          <textarea id="fRemarks" rows="2" placeholder="Conversation summary, quotes..."></textarea>
-        </div>
-
-        <button type="submit" id="btnSaveVisitor" class="submit-btn">Save Lead Record</button>
-      </form>
+          <button type="submit" id="btnSaveVisitor" class="submit-btn">Save Lead Record</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -965,21 +1075,21 @@
       </div>
       <form id="touchForm">
         <input type="hidden" id="touchLeadId" />
-        <p id="touchLeadLabel" style="font-size:12px; font-weight:700; color:#4f46e5; margin-bottom:10px;"></p>
+        <p id="touchLeadLabel" style="font-size:13px; font-weight:700; color:#4f46e5; margin-bottom:10px;"></p>
 
         <div class="field">
-          <label>Call / Meeting Summary *</label>
-          <textarea id="tNote" rows="3" required placeholder="Customer response, quotation status..."></textarea>
+          <label style="font-size:12px;">Call / Meeting Summary *</label>
+          <textarea id="tNote" rows="3" required placeholder="Customer response, quotation status..." style="font-size:15px;"></textarea>
         </div>
 
         <div class="row-2">
           <div class="field">
-            <label>Next Follow-up Date</label>
-            <input type="date" id="tNextDate" />
+            <label style="font-size:12px;">Next Follow-up Date</label>
+            <input type="date" id="tNextDate" style="font-size:15px;" />
           </div>
           <div class="field">
-            <label>Update Stage</label>
-            <select id="tStage">
+            <label style="font-size:12px;">Update Stage</label>
+            <select id="tStage" style="font-size:15px;">
               <option value="Hot">🔥 Hot</option>
               <option value="Warm">☀️ Warm</option>
               <option value="Cold">❄️ Cold</option>
@@ -989,7 +1099,7 @@
           </div>
         </div>
 
-        <button type="submit" id="btnSaveTouch" class="submit-btn" style="background:#059669;">Save Follow-up</button>
+        <button type="submit" id="btnSaveTouch" class="submit-btn" style="background:#059669; font-size:15px; padding:13px;">Save Follow-up</button>
       </form>
     </div>
   </div>
@@ -1005,7 +1115,7 @@
         <input type="hidden" id="deleteTargetId" />
         <p style="font-size:12px; color:#475569; margin-bottom:10px;">Enter security PIN to permanently delete this visitor record:</p>
         <div class="field">
-          <input type="password" id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="4" required placeholder="Enter 4-digit PIN" style="text-align:center; font-size:18px; letter-spacing:6px; font-weight:800;" />
+          <input type="password" id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="4" required placeholder="Enter 4-digit PIN" style="text-align:center; font-size:20px; letter-spacing:6px; font-weight:800;" />
         </div>
         <p id="pinError" style="color:#dc2626; font-size:11px; font-weight:700; margin-bottom:8px; display:none;">❌ Incorrect PIN. Deletion cancelled.</p>
         <button type="submit" class="submit-btn" style="background:#dc2626;">Verify &amp; Delete</button>
@@ -1051,7 +1161,7 @@
         <input type="hidden" id="quickAddType" />
         <div class="field">
           <label id="quickAddLabel">Name *</label>
-          <input type="text" id="quickAddInput" required placeholder="Enter name..." />
+          <input type="text" id="quickAddInput" required placeholder="Enter name..." style="font-size:15px;" />
         </div>
         <button type="submit" class="submit-btn">Add to List</button>
       </form>
@@ -1424,6 +1534,8 @@
           }
         }
         openModal("visitorModal");
+        var bodyEl = document.querySelector("#visitorModal .fullscreen-body");
+        if (bodyEl) bodyEl.scrollTop = 0;
       }
 
       function openTouchForm(id) {
@@ -1489,7 +1601,7 @@
           closeModal(closeBtn.getAttribute("data-close"));
           return;
         }
-        if (target.classList && target.classList.contains("modal-backdrop")) {
+        if (target.classList && target.classList.contains("modal-backdrop") && !target.classList.contains("fullscreen-modal")) {
           target.classList.remove("open");
           return;
         }
