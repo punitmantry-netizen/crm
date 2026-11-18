@@ -18,37 +18,10 @@
       max-width: 100vw;
       overflow-x: hidden;
       background-color: #f4f6fa;
-      color: #0f172a;
-      font-size: 15px;
-      line-height: 1.45;
-      padding-bottom: 65px;
-    }
-
-    /* Pull/Swipe Refresh Indicator */
-    .refresh-indicator {
-      position: fixed;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      bottom: 24px;
-      background: #0f172a;
-      color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 999px;
+      color: #1e293b;
       font-size: 13px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
-      z-index: 9990;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-    }
-
-    .refresh-indicator.visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+      line-height: 1.4;
+      padding-bottom: 45px;
     }
 
     /* Top Header */
@@ -74,15 +47,15 @@
     }
 
     .brand-logo {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       background: linear-gradient(135deg, #4f46e5, #6366f1);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fbbf24;
-      font-size: 17px;
+      font-size: 16px;
       flex-shrink: 0;
       box-shadow: 0 2px 5px rgba(79,70,229,0.25);
     }
@@ -94,7 +67,7 @@
     }
 
     .brand-name {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: #0f172a;
     }
@@ -108,12 +81,12 @@
     .brand-pill {
       background: #eef2ff;
       color: #4338ca;
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 700;
       padding: 3px 7px;
       border-radius: 10px;
       line-height: 1.15;
-      max-width: 66px;
+      max-width: 62px;
     }
 
     .header-right {
@@ -124,15 +97,15 @@
     }
 
     .icon-btn {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 9px;
       border: 1px solid #e2e8f0;
       background: #f8fafc;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       position: relative;
       touch-action: manipulation;
@@ -142,8 +115,8 @@
       position: absolute;
       top: -2px;
       right: -2px;
-      width: 9px;
-      height: 9px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #f59e0b;
       border: 1.5px solid #fff;
@@ -157,8 +130,8 @@
       position: absolute;
       top: -4px;
       right: -4px;
-      min-width: 17px;
-      height: 17px;
+      min-width: 16px;
+      height: 16px;
       padding: 0 4px;
       border-radius: 999px;
       background: #ef4444;
@@ -180,7 +153,7 @@
       color: #ffffff;
       border: none;
       border-radius: 10px;
-      padding: 7px 11px;
+      padding: 6px 10px;
       font-size: 11px;
       font-weight: 700;
       display: flex;
@@ -196,10 +169,10 @@
     /* Notification Center Popover */
     .notif-popover {
       position: fixed;
-      top: 60px;
+      top: 58px;
       left: 12px;
       right: 12px;
-      max-width: 460px;
+      max-width: 440px;
       margin: 0 auto;
       background: #ffffff;
       border: 1px solid #cbd5e1;
@@ -226,7 +199,7 @@
     }
 
     .notif-title {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       color: #0f172a;
       letter-spacing: 0.2px;
@@ -243,15 +216,15 @@
       color: #4f46e5;
       border: 1px solid #c7d2fe;
       border-radius: 8px;
-      padding: 5px 9px;
-      font-size: 12px;
+      padding: 4px 8px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       touch-action: manipulation;
     }
 
     .notif-list {
-      max-height: 260px;
+      max-height: 240px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -262,7 +235,7 @@
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 10px;
-      padding: 10px 12px;
+      padding: 9px 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -275,15 +248,15 @@
     }
 
     .notif-item-name {
-      font-size: 15px;
+      font-size: 13px;
       font-weight: 800;
       color: #0f172a;
       word-break: break-word;
     }
 
     .notif-item-meta {
-      font-size: 12px;
-      color: #475569;
+      font-size: 11px;
+      color: #64748b;
       margin-top: 2px;
       word-break: break-word;
     }
@@ -291,9 +264,9 @@
     .notif-tag {
       display: inline-block;
       margin-top: 5px;
-      padding: 4px 8px;
+      padding: 3px 7px;
       border-radius: 6px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 800;
       background: #fef3c7;
       color: #92400e;
@@ -311,8 +284,8 @@
       color: #4338ca;
       border: 1px solid #c7d2fe;
       border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 12px;
+      padding: 6px 10px;
+      font-size: 11px;
       font-weight: 700;
       cursor: pointer;
       flex-shrink: 0;
@@ -325,7 +298,7 @@
       padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
     }
 
     /* KPI Grid */
@@ -354,7 +327,7 @@
     }
 
     .kpi-label {
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.3px;
@@ -367,7 +340,7 @@
     .kpi-card.emerald .kpi-label, .kpi-card.emerald .kpi-num { color: #059669; }
 
     .kpi-num {
-      font-size: 26px;
+      font-size: 24px;
       font-weight: 800;
       color: #0f172a;
       margin: 4px 0 2px 0;
@@ -375,15 +348,15 @@
     }
 
     .kpi-sub {
-      font-size: 11px;
-      color: #64748b;
+      font-size: 10px;
+      color: #94a3b8;
     }
 
     .kpi-icon {
       position: absolute;
       right: 12px;
       top: 12px;
-      font-size: 18px;
+      font-size: 16px;
     }
 
     /* Filter Box */
@@ -391,7 +364,7 @@
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 16px;
-      padding: 13px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -399,13 +372,11 @@
 
     .search-input {
       width: 100%;
-      padding: 11px 13px;
-      border: 1.5px solid #cbd5e1;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 12px;
       background: #f8fafc;
-      color: #0f172a;
-      font-weight: 600;
       outline: none;
     }
 
@@ -413,13 +384,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      gap: 6px;
     }
 
     .view-tabs {
       display: flex;
       background: #f1f5f9;
-      padding: 4px;
+      padding: 3px;
       border-radius: 10px;
       flex: 1;
     }
@@ -428,9 +399,9 @@
       flex: 1;
       border: none;
       background: transparent;
-      padding: 8px 6px;
+      padding: 6px 4px;
       border-radius: 8px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: #64748b;
       cursor: pointer;
@@ -449,16 +420,16 @@
     .filter-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 9px;
+      gap: 8px;
     }
 
     .filter-item label {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 700;
-      color: #475569;
+      color: #64748b;
       margin-bottom: 4px;
     }
 
@@ -467,86 +438,65 @@
       font-weight: 800;
       background: none;
       border: none;
-      font-size: 11px;
+      font-size: 10px;
       cursor: pointer;
       padding: 2px 4px;
     }
 
     .select-control {
       width: 100%;
-      padding: 10px 8px;
+      padding: 8px;
       border: 1px solid #cbd5e1;
       border-radius: 9px;
-      font-size: 13px;
-      background: #f8fafc;
-      color: #0f172a;
-      font-weight: 600;
-    }
-
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 2px 4px;
-      font-size: 13px;
-      font-weight: 800;
-      color: #334155;
-    }
-
-    .swipe-hint {
       font-size: 11px;
+      background: #f8fafc;
+      color: #1e293b;
       font-weight: 600;
-      color: #64748b;
     }
 
-    /* Enlarged Filter Results: Lead Cards & Table */
+    /* Lead Cards & Table */
     .records-area {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
     }
 
     .lead-card {
       background: #ffffff;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 16px;
-      padding: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 11px;
-      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      gap: 8px;
     }
 
-    .lead-card.due { border-left: 6px solid #f59e0b; }
-    .lead-card.overdue { border-left: 6px solid #ef4444; }
+    .lead-card.due { border-left: 4px solid #f59e0b; }
+    .lead-card.overdue { border-left: 4px solid #ef4444; }
 
     .lead-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 10px;
+      gap: 8px;
     }
 
     .lead-name {
-      font-size: 18px;
+      font-size: 14px;
       font-weight: 800;
       color: #0f172a;
-      line-height: 1.25;
-      word-break: break-word;
     }
 
     .lead-meta {
-      font-size: 14px;
-      color: #334155;
-      margin-top: 4px;
-      line-height: 1.4;
-      word-break: break-word;
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
     }
 
     .stage-badge {
-      font-size: 12px;
+      font-size: 10px;
       font-weight: 800;
-      padding: 5px 11px;
+      padding: 3px 8px;
       border-radius: 999px;
       background: #fef3c7;
       color: #b45309;
@@ -559,134 +509,100 @@
     .stage-badge.Lost { background: #f1f5f9; color: #475569; }
 
     .req-box {
-      background: #f1f5f9;
-      border: 1px solid #e2e8f0;
-      border-radius: 11px;
-      padding: 12px 13px;
-      font-size: 15px;
-      font-weight: 600;
-      color: #0f172a;
-      line-height: 1.45;
-      word-break: break-word;
-    }
-
-    .remarks-line {
-      font-size: 13.5px;
-      color: #475569;
-      line-height: 1.4;
-      word-break: break-word;
+      background: #f8fafc;
+      border-radius: 9px;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: #334155;
     }
 
     .touch-box {
       background: #eef2ff;
-      border: 1px solid #c7d2fe;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 13.5px;
-      color: #1e1b4b;
-      line-height: 1.4;
-      word-break: break-word;
+      border-radius: 8px;
+      padding: 6px 9px;
+      font-size: 10px;
+      color: #3730a3;
     }
 
     .lead-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 4px;
+      gap: 6px;
+      margin-top: 2px;
     }
 
     .action-btn {
-      padding: 11px 10px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 800;
+      padding: 7px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 700;
       text-align: center;
       text-decoration: none;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #e2e8f0;
       background: #f8fafc;
-      color: #0f172a;
+      color: #1e293b;
       cursor: pointer;
     }
 
     .action-btn.primary {
       grid-column: span 2;
       background: #eef2ff;
-      color: #3730a3;
-      border-color: #a5b4fc;
+      color: #4338ca;
+      border-color: #c7d2fe;
     }
 
     .action-btn.wa {
       background: #ecfdf5;
       color: #065f46;
-      border-color: #6ee7b7;
+      border-color: #a7f3d0;
     }
 
     .lead-footer {
       display: flex;
       justify-content: flex-end;
-      gap: 16px;
-      border-top: 1px solid #e2e8f0;
-      padding-top: 10px;
-      margin-top: 2px;
+      gap: 12px;
+      border-top: 1px solid #f1f5f9;
+      padding-top: 6px;
     }
 
     .text-btn {
       background: none;
       border: none;
-      font-size: 14px;
-      font-weight: 800;
-      color: #475569;
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
       cursor: pointer;
-      padding: 4px 8px;
+      padding: 3px 6px;
     }
 
     .text-btn.danger { color: #dc2626; }
 
-    /* Enlarged Table View */
+    /* Table View */
     .table-wrap {
       background: #fff;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 14px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
       overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 14px;
+      font-size: 11px;
     }
 
     th, td {
-      padding: 13px 12px;
+      padding: 9px 10px;
       text-align: left;
-      border-bottom: 1px solid #e2e8f0;
-      vertical-align: middle;
+      border-bottom: 1px solid #f1f5f9;
     }
 
     th {
-      background: #f1f5f9;
-      font-weight: 800;
-      color: #334155;
-      font-size: 12px;
+      background: #f8fafc;
+      font-weight: 700;
+      color: #64748b;
+      font-size: 10px;
       text-transform: uppercase;
-    }
-
-    /* Pipeline Stage Group Header */
-    .pipeline-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .pipeline-header {
-      font-size: 15px;
-      font-weight: 800;
-      color: #1e293b;
-      background: #e2e8f0;
-      padding: 8px 12px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
     }
 
     /* Modals */
@@ -716,117 +632,6 @@
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
     }
 
-    /* Full-Screen High-Visibility Entry Modal for Customer Data */
-    .modal-backdrop.fullscreen-modal {
-      padding: 0;
-      background: #ffffff;
-      align-items: stretch;
-      justify-content: stretch;
-    }
-
-    .modal-backdrop.fullscreen-modal .modal-box {
-      max-width: 100%;
-      width: 100%;
-      height: 100dvh;
-      max-height: 100dvh;
-      border-radius: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      box-shadow: none;
-    }
-
-    .fullscreen-header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: #4f46e5;
-      color: #ffffff;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    }
-
-    .fullscreen-header .modal-title {
-      color: #ffffff;
-      font-size: 18px;
-      font-weight: 800;
-    }
-
-    .fullscreen-header .close-btn {
-      background: rgba(255, 255, 255, 0.2);
-      color: #ffffff;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      font-size: 18px;
-    }
-
-    .fullscreen-body {
-      padding: 18px 16px 45px 16px;
-      flex: 1;
-      overflow-y: auto;
-      background: #f8fafc;
-    }
-
-    .fullscreen-body .field {
-      margin-bottom: 16px;
-    }
-
-    .fullscreen-body .field label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      font-weight: 800;
-      color: #1e293b;
-      margin-bottom: 6px;
-      letter-spacing: 0.2px;
-    }
-
-    .fullscreen-body .field input,
-    .fullscreen-body .field select,
-    .fullscreen-body .field textarea {
-      font-size: 16px;
-      padding: 13px 14px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #0f172a;
-      font-weight: 600;
-      min-height: 48px;
-    }
-
-    .fullscreen-body .field input:focus,
-    .fullscreen-body .field select:focus,
-    .fullscreen-body .field textarea:focus {
-      border-color: #4f46e5;
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-    }
-
-    .fullscreen-body .row-2 {
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
-
-    @media (min-width: 560px) {
-      .fullscreen-body .row-2 {
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-    }
-
-    .fullscreen-body .submit-btn {
-      font-size: 16px;
-      padding: 15px;
-      border-radius: 12px;
-      margin-top: 10px;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    }
-
     .modal-head {
       display: flex;
       justify-content: space-between;
@@ -837,7 +642,7 @@
     }
 
     .modal-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       color: #0f172a;
     }
@@ -845,10 +650,10 @@
     .close-btn {
       background: #f1f5f9;
       border: none;
-      width: 30px;
-      height: 30px;
+      width: 28px;
+      height: 28px;
       border-radius: 8px;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
       color: #475569;
       cursor: pointer;
@@ -860,7 +665,7 @@
 
     .field label {
       display: block;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
       color: #475569;
       margin-bottom: 4px;
@@ -868,10 +673,10 @@
 
     .field input, .field select, .field textarea {
       width: 100%;
-      padding: 10px 11px;
+      padding: 9px 10px;
       border: 1px solid #cbd5e1;
       border-radius: 9px;
-      font-size: 14px;
+      font-size: 12px;
       background: #f8fafc;
     }
 
@@ -886,9 +691,9 @@
       background: #4f46e5;
       color: #ffffff;
       border: none;
-      padding: 12px;
+      padding: 11px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 800;
       cursor: pointer;
       margin-top: 6px;
@@ -896,20 +701,16 @@
 
     .empty-state {
       text-align: center;
-      padding: 32px 18px;
+      padding: 28px 16px;
       background: #ffffff;
-      border: 1.5px dashed #cbd5e1;
-      border-radius: 16px;
-      color: #475569;
-      font-size: 15px;
-      line-height: 1.5;
+      border: 1px dashed #cbd5e1;
+      border-radius: 14px;
+      color: #64748b;
+      font-size: 12px;
     }
   </style>
 </head>
 <body>
-
-  <!-- Swipe-Up / Pull Refresh Pill Indicator -->
-  <div id="refreshIndicator" class="refresh-indicator">🔄 Syncing Cloud Data...</div>
 
   <!-- Header -->
   <header class="header-bar">
@@ -1064,109 +865,94 @@
       </div>
     </div>
 
-    <!-- Results Count Bar -->
-    <div class="results-header">
-      <span id="resultsCountLabel">Showing 0 Records</span>
-      <span class="swipe-hint">↑ Swipe up at bottom to sync</span>
-    </div>
-
     <!-- Output Container -->
     <div id="outputContainer" class="records-area"></div>
   </div>
 
-  <!-- Full-Screen Large-Visibility Modal: Record / Edit Visitor -->
-  <div id="visitorModal" class="modal-backdrop fullscreen-modal">
+  <!-- Modal: Record / Edit Visitor -->
+  <div id="visitorModal" class="modal-backdrop">
     <div class="modal-box">
-      <div class="fullscreen-header">
+      <div class="modal-head">
         <span class="modal-title" id="visitorModalTitle">Record Visitor / Lead</span>
         <button type="button" class="close-btn" data-close="visitorModal">✕</button>
       </div>
-      <div class="fullscreen-body">
-        <form id="visitorForm">
-          <input type="hidden" id="editId" />
-          <div class="row-2">
-            <div class="field">
-              <label>Visit Date *</label>
-              <input type="date" id="fVisitDate" required />
-            </div>
-            <div class="field">
-              <label>
-                <span>Sales Person *</span>
-                <button type="button" id="btnAddRepForm" class="add-link" style="font-size:12px;">+ Add New</button>
-              </label>
-              <select id="fSalesPerson" required>
-                <option value="">Select Sales Person</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label>Customer Name *</label>
-              <input type="text" id="fCustomerName" required placeholder="Enter Customer Full Name" />
-            </div>
-            <div class="field">
-              <label>Phone / WhatsApp</label>
-              <input type="tel" id="fPhone" inputmode="tel" placeholder="10-digit mobile number" />
-            </div>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label>
-                <span>Cuttack Area *</span>
-                <button type="button" id="btnAddAreaForm" class="add-link" style="font-size:12px;">+ Add Area</button>
-              </label>
-              <select id="fArea" required>
-                <option value="">Select Area (Cuttack)</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Lead Stage</label>
-              <select id="fStage">
-                <option value="Hot">🔥 Hot</option>
-                <option value="Warm" selected>☀️ Warm</option>
-                <option value="Cold">❄️ Cold</option>
-                <option value="Converted">✅ Converted</option>
-                <option value="Lost">❌ Lost</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label>Priority</label>
-              <select id="fPriority">
-                <option value="High">High</option>
-                <option value="Medium" selected>Medium</option>
-                <option value="Low">Low</option>
-              </select>
-            </div>
-            <div class="field">
-              <label>Next Follow-up Date</label>
-              <input type="date" id="fFollowUpDate" />
-            </div>
-          </div>
-
-          <div class="row-2">
-            <div class="field">
-              <label>Follow-up Time</label>
-              <input type="time" id="fFollowUpTime" value="11:00" />
-            </div>
-            <div class="field">
-              <label>Material Requirement *</label>
-              <input type="text" id="fRequirement" required placeholder="e.g. 4x2 GVT Tiles, Granite, sq ft..." />
-            </div>
-          </div>
-
+      <form id="visitorForm">
+        <input type="hidden" id="editId" />
+        <div class="row-2">
           <div class="field">
-            <label>Remarks / Notes</label>
-            <textarea id="fRemarks" rows="3" placeholder="Conversation summary, rates quoted, sample details..."></textarea>
+            <label>Visit Date *</label>
+            <input type="date" id="fVisitDate" required />
           </div>
+          <div class="field">
+            <label>Sales Person *</label>
+            <input type="text" id="fSalesPerson" list="repDatalist" required placeholder="Sales Person Name" />
+            <datalist id="repDatalist"></datalist>
+          </div>
+        </div>
 
-          <button type="submit" id="btnSaveVisitor" class="submit-btn">Save Lead Record</button>
-        </form>
-      </div>
+        <div class="row-2">
+          <div class="field">
+            <label>Customer Name *</label>
+            <input type="text" id="fCustomerName" required placeholder="Customer Name" />
+          </div>
+          <div class="field">
+            <label>Phone / WhatsApp</label>
+            <input type="tel" id="fPhone" placeholder="10-digit mobile" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Cuttack Area *</label>
+            <select id="fArea" required>
+              <option value="">Select Area (Cuttack)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Lead Stage</label>
+            <select id="fStage">
+              <option value="Hot">🔥 Hot</option>
+              <option value="Warm" selected>☀️ Warm</option>
+              <option value="Cold">❄️ Cold</option>
+              <option value="Converted">✅ Converted</option>
+              <option value="Lost">❌ Lost</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Priority</label>
+            <select id="fPriority">
+              <option value="High">High</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Next Follow-up Date</label>
+            <input type="date" id="fFollowUpDate" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Follow-up Time</label>
+            <input type="time" id="fFollowUpTime" value="11:00" />
+          </div>
+          <div class="field">
+            <label>Requirement *</label>
+            <input type="text" id="fRequirement" required placeholder="Tiles, Granite, sq ft..." />
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Remarks / Notes</label>
+          <textarea id="fRemarks" rows="2" placeholder="Conversation summary, quotes..."></textarea>
+        </div>
+
+        <button type="submit" id="btnSaveVisitor" class="submit-btn">Save Lead Record</button>
+      </form>
     </div>
   </div>
 
@@ -1179,21 +965,21 @@
       </div>
       <form id="touchForm">
         <input type="hidden" id="touchLeadId" />
-        <p id="touchLeadLabel" style="font-size:14px; font-weight:700; color:#4f46e5; margin-bottom:10px;"></p>
+        <p id="touchLeadLabel" style="font-size:12px; font-weight:700; color:#4f46e5; margin-bottom:10px;"></p>
 
         <div class="field">
-          <label style="font-size:13px;">Call / Meeting Summary *</label>
-          <textarea id="tNote" rows="3" required placeholder="Customer response, quotation status..." style="font-size:16px;"></textarea>
+          <label>Call / Meeting Summary *</label>
+          <textarea id="tNote" rows="3" required placeholder="Customer response, quotation status..."></textarea>
         </div>
 
         <div class="row-2">
           <div class="field">
-            <label style="font-size:13px;">Next Follow-up Date</label>
-            <input type="date" id="tNextDate" style="font-size:16px;" />
+            <label>Next Follow-up Date</label>
+            <input type="date" id="tNextDate" />
           </div>
           <div class="field">
-            <label style="font-size:13px;">Update Stage</label>
-            <select id="tStage" style="font-size:16px;">
+            <label>Update Stage</label>
+            <select id="tStage">
               <option value="Hot">🔥 Hot</option>
               <option value="Warm">☀️ Warm</option>
               <option value="Cold">❄️ Cold</option>
@@ -1203,26 +989,26 @@
           </div>
         </div>
 
-        <button type="submit" id="btnSaveTouch" class="submit-btn" style="background:#059669; font-size:16px; padding:14px;">Save Follow-up</button>
+        <button type="submit" id="btnSaveTouch" class="submit-btn" style="background:#059669;">Save Follow-up</button>
       </form>
     </div>
   </div>
 
   <!-- Modal: PIN Protected Delete Verification (PIN: 3431) -->
   <div id="pinModal" class="modal-backdrop">
-    <div class="modal-box" style="max-width:340px;">
+    <div class="modal-box" style="max-width:320px;">
       <div class="modal-head">
         <span class="modal-title">🔒 Confirm Delete Record</span>
         <button type="button" class="close-btn" data-close="pinModal">✕</button>
       </div>
       <form id="pinForm">
         <input type="hidden" id="deleteTargetId" />
-        <p style="font-size:14px; color:#334155; margin-bottom:12px;">Enter security PIN to permanently delete this visitor record:</p>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Enter security PIN to permanently delete this visitor record:</p>
         <div class="field">
-          <input type="password" id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="4" required placeholder="Enter 4-digit PIN" style="text-align:center; font-size:22px; letter-spacing:8px; font-weight:800;" />
+          <input type="password" id="pinInput" inputmode="numeric" pattern="[0-9]*" maxlength="4" required placeholder="Enter 4-digit PIN" style="text-align:center; font-size:18px; letter-spacing:6px; font-weight:800;" />
         </div>
-        <p id="pinError" style="color:#dc2626; font-size:12px; font-weight:700; margin-bottom:8px; display:none;">❌ Incorrect PIN. Deletion cancelled.</p>
-        <button type="submit" class="submit-btn" style="background:#dc2626; font-size:15px;">Verify &amp; Delete</button>
+        <p id="pinError" style="color:#dc2626; font-size:11px; font-weight:700; margin-bottom:8px; display:none;">❌ Incorrect PIN. Deletion cancelled.</p>
+        <button type="submit" class="submit-btn" style="background:#dc2626;">Verify &amp; Delete</button>
       </form>
     </div>
   </div>
@@ -1234,7 +1020,7 @@
         <span class="modal-title">Supabase Cloud Sync</span>
         <button type="button" class="close-btn" data-close="dbModal">✕</button>
       </div>
-      <div id="dbStatusBanner" style="font-size:13px; padding:10px 12px; border-radius:8px; background:#f1f5f9; margin-bottom:10px;">
+      <div id="dbStatusBanner" style="font-size:11px; padding:8px 10px; border-radius:8px; background:#f1f5f9; margin-bottom:10px;">
         Checking connection...
       </div>
       <form id="dbForm">
@@ -1244,7 +1030,7 @@
         </div>
         <div class="field">
           <label>Supabase Anon Key</label>
-          <textarea id="dbKey" rows="3" required style="font-family:monospace; font-size:12px;"></textarea>
+          <textarea id="dbKey" rows="3" required style="font-family:monospace; font-size:10px;"></textarea>
         </div>
         <div class="row-2">
           <button type="button" id="btnTestDb" class="submit-btn" style="background:#0284c7;">Test Ping</button>
@@ -1256,26 +1042,25 @@
 
   <!-- Modal: Quick Add Rep / Cuttack Area -->
   <div id="quickAddModal" class="modal-backdrop">
-    <div class="modal-box" style="max-width:350px;">
+    <div class="modal-box" style="max-width:340px;">
       <div class="modal-head">
         <span class="modal-title" id="quickAddTitle">Add New Item</span>
         <button type="button" class="close-btn" data-close="quickAddModal">✕</button>
       </div>
       <form id="quickAddForm">
         <input type="hidden" id="quickAddType" />
-        <input type="hidden" id="quickAddSource" />
         <div class="field">
           <label id="quickAddLabel">Name *</label>
-          <input type="text" id="quickAddInput" required placeholder="Enter name..." style="font-size:16px;" />
+          <input type="text" id="quickAddInput" required placeholder="Enter name..." />
         </div>
-        <button type="submit" class="submit-btn" style="font-size:15px;">Add to List</button>
+        <button type="submit" class="submit-btn">Add to List</button>
       </form>
     </div>
   </div>
 
   <script>
     (function() {
-      var DEFAULT_URL = "https://adsczhoqjmnxvjxgbqvq.supabase.co";
+      var DEFAULT_URL = "https://adsczhoqmnxvjxgbqvq.supabase.co";
       var DEFAULT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkc2N6aG9xam1ueHZqeGdicXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNTMyNzUsImV4cCI6MjEwODgyOTI3NX0.DhEJ1tV1O2EJCHt0EL8402CwNRq1UXUkHnqITh4xDkM";
       var DELETE_PIN = "3431";
 
@@ -1304,7 +1089,7 @@
       ];
 
       var records = [];
-      var customReps = ["Vinit Mantry", "Punit Mantry", "Lipu"];
+      var customReps = ["Vinit Mantry", "Punit Mantry"];
       var customAreas = CUTTACK_AREAS.slice();
       var currentView = "cards";
       var isCloudConnected = false;
@@ -1332,14 +1117,7 @@
         if (aSaved) customAreas = JSON.parse(aSaved);
       } catch (e) {}
 
-      function getUrl() {
-        var saved = store.get("lf_sb_url", DEFAULT_URL);
-        if (saved && saved.indexOf("adsczhoqmnxv") !== -1) {
-          saved = DEFAULT_URL;
-          store.set("lf_sb_url", DEFAULT_URL);
-        }
-        return saved;
-      }
+      function getUrl() { return store.get("lf_sb_url", DEFAULT_URL); }
       function getKey() { return store.get("lf_sb_key", DEFAULT_KEY); }
       function todayStr() { return new Date().toISOString().split("T")[0]; }
 
@@ -1351,21 +1129,6 @@
       function closeModal(id) {
         var el = document.getElementById(id);
         if (el) el.classList.remove("open");
-      }
-
-      function showRefreshToast(text) {
-        var ind = document.getElementById("refreshIndicator");
-        if (!ind) return;
-        ind.textContent = text;
-        ind.classList.add("visible");
-      }
-
-      function hideRefreshToast(delay) {
-        var ind = document.getElementById("refreshIndicator");
-        if (!ind) return;
-        setTimeout(function() {
-          ind.classList.remove("visible");
-        }, delay || 900);
       }
 
       function playChime() {
@@ -1388,23 +1151,18 @@
       function syncDropdowns() {
         var repMap = {};
         var areaMap = {};
-        customReps.forEach(function(x) { if (x) repMap[x.trim()] = true; });
-        customAreas.forEach(function(x) { if (x) areaMap[x.trim()] = true; });
+        customReps.forEach(function(x) { if (x) repMap[x] = true; });
+        customAreas.forEach(function(x) { if (x) areaMap[x] = true; });
         records.forEach(function(r) {
-          if (r.salesPerson) repMap[r.salesPerson.trim()] = true;
+          if (r.salesPerson) repMap[r.salesPerson] = true;
         });
 
         var repKeys = Object.keys(repMap);
-
-        // 1. Filter Sales Person Dropdown
         var filterRep = document.getElementById("filterRep");
         var curRep = filterRep.value;
         filterRep.innerHTML = '<option value="">All Sales Persons (' + repKeys.length + ')</option>';
-
-        // 2. Visitor Entry Form Sales Person Dropdown
-        var formRep = document.getElementById("fSalesPerson");
-        var curFormRep = formRep.value;
-        formRep.innerHTML = '<option value="">Select Sales Person</option>';
+        var repList = document.getElementById("repDatalist");
+        repList.innerHTML = "";
 
         repKeys.forEach(function(rep) {
           var opt = document.createElement("option");
@@ -1412,15 +1170,12 @@
           opt.textContent = rep;
           filterRep.appendChild(opt);
 
-          var fOpt = document.createElement("option");
-          fOpt.value = rep;
-          fOpt.textContent = rep;
-          formRep.appendChild(fOpt);
+          var dOpt = document.createElement("option");
+          dOpt.value = rep;
+          repList.appendChild(dOpt);
         });
         filterRep.value = curRep;
-        formRep.value = curFormRep;
 
-        // 3. Filter Area Dropdown & Form Area Dropdown
         var areaKeys = Object.keys(areaMap);
         var filterArea = document.getElementById("filterArea");
         var curArea = filterArea.value;
@@ -1445,11 +1200,8 @@
         formArea.value = curFormArea;
       }
 
-      async function fetchRecords(isGestureRefresh) {
+      async function fetchRecords() {
         var dot = document.getElementById("syncDot");
-        if (isGestureRefresh) {
-          showRefreshToast("🔄 Syncing latest records...");
-        }
         try {
           var res = await fetch(getUrl() + "/rest/v1/visitors?select=*&order=created_at.desc", {
             method: "GET",
@@ -1484,10 +1236,6 @@
             store.set("lf_records_cache", JSON.stringify(records));
             syncDropdowns();
             render();
-            if (isGestureRefresh) {
-              showRefreshToast("✅ Up to date (" + records.length + " records)");
-              hideRefreshToast(1200);
-            }
             return;
           }
         } catch (e) {}
@@ -1501,53 +1249,6 @@
         }
         syncDropdowns();
         render();
-        if (isGestureRefresh) {
-          showRefreshToast("⚠️ Offline — Loaded local cache");
-          hideRefreshToast(1400);
-        }
-      }
-
-      function buildCardHtml(r, today) {
-        var isDue = r.followUpDate === today;
-        var isOver = r.followUpDate && r.followUpDate < today && r.stage !== "Converted" && r.stage !== "Lost";
-        var cls = "lead-card" + (isDue ? " due" : "") + (isOver ? " overdue" : "");
-        var cleanPhone = (r.phone || "").replace(/[^0-9]/g, "");
-
-        var phoneBtns = cleanPhone ? (
-          '<a href="tel:' + cleanPhone + '" class="action-btn">📞 Call</a>' +
-          '<a href="https://wa.me/91' + cleanPhone + '?text=' + encodeURIComponent("Hello " + r.customerName + ", following up from Maheswari Stones & Ceramics regarding: " + r.requirement) + '" target="_blank" class="action-btn wa">💬 WhatsApp</a>'
-        ) : "";
-
-        var touchHtml = r.lastTouchDate ? (
-          '<div class="touch-box"><strong>Last Call (' + escapeHtml(r.lastTouchDate) + '):</strong> ' + escapeHtml(r.lastTouchNote) + '</div>'
-        ) : "";
-
-        var remarksHtml = r.remarks ? (
-          '<div class="remarks-line"><strong>Notes:</strong> ' + escapeHtml(r.remarks) + '</div>'
-        ) : "";
-
-        return '<div class="' + cls + '">' +
-          '<div class="lead-top">' +
-            '<div style="min-width:0; flex:1;">' +
-              '<div class="lead-name">' + escapeHtml(r.customerName) + '</div>' +
-              '<div class="lead-meta">📍 <strong>' + escapeHtml(r.area || "Cuttack") + '</strong> • Rep: <strong>' + escapeHtml(r.salesPerson) + '</strong></div>' +
-              '<div class="lead-meta">📅 Visited: ' + escapeHtml(r.visitDate) + (cleanPhone ? (' • 📱 ' + escapeHtml(r.phone)) : '') + '</div>' +
-            '</div>' +
-            '<span class="stage-badge ' + escapeHtml(r.stage) + '">' + escapeHtml(r.stage) + '</span>' +
-          '</div>' +
-          '<div class="req-box">' + escapeHtml(r.requirement) + '</div>' +
-          remarksHtml +
-          touchHtml +
-          '<div class="lead-meta">⏰ Follow-up: <strong>' + escapeHtml(r.followUpDate || "Not set") + (r.followUpDate && r.followUpTime ? (' @ ' + escapeHtml(r.followUpTime)) : '') + '</strong> • Priority: <strong>' + escapeHtml(r.priority) + '</strong></div>' +
-          '<div class="lead-actions">' +
-            '<button type="button" class="action-btn primary" data-action="touch" data-id="' + r.id + '">📞 Log Follow-up Call</button>' +
-            phoneBtns +
-          '</div>' +
-          '<div class="lead-footer">' +
-            '<button type="button" class="text-btn" data-action="edit" data-id="' + r.id + '">✏️ Edit</button>' +
-            '<button type="button" class="text-btn danger" data-action="del" data-id="' + r.id + '">🗑️ Delete</button>' +
-          '</div>' +
-        '</div>';
       }
 
       function render() {
@@ -1585,7 +1286,7 @@
         var notifListEl = document.getElementById("notifList");
         var combinedAlerts = overdueList.concat(dueList);
         if (combinedAlerts.length === 0) {
-          notifListEl.innerHTML = '<div style="text-align:center; padding:16px; font-size:13px; color:#64748b;">No follow-ups due today or overdue.</div>';
+          notifListEl.innerHTML = '<div style="text-align:center; padding:16px; font-size:12px; color:#64748b;">No follow-ups due today or overdue.</div>';
         } else {
           notifListEl.innerHTML = combinedAlerts.map(function(r) {
             var isOver = r.followUpDate < today;
@@ -1636,45 +1337,60 @@
           return true;
         });
 
-        document.getElementById("resultsCountLabel").textContent = "Showing " + filtered.length + " Result" + (filtered.length === 1 ? "" : "s");
-
         var container = document.getElementById("outputContainer");
         if (filtered.length === 0) {
-          container.innerHTML = '<div class="empty-state">No visitor records match your current filter.<br><br>Tap <strong>+ Record Visitor / Lead</strong> at the top right to log a customer.</div>';
+          container.innerHTML = '<div class="empty-state">No visitor records match your current view.<br><br>Tap <strong>+ Record Visitor / Lead</strong> at the top right to log a customer.</div>';
           return;
         }
 
         if (currentView === "table") {
           var rows = filtered.map(function(r) {
             return '<tr>' +
-              '<td><strong style="font-size:15px;color:#0f172a;">' + escapeHtml(r.customerName) + '</strong><br><span style="color:#475569;font-size:12px;">📍 ' + escapeHtml(r.area || "Cuttack") + ' • ' + escapeHtml(r.salesPerson) + '</span></td>' +
+              '<td><strong>' + escapeHtml(r.customerName) + '</strong><br><span style="color:#64748b;font-size:10px;">' + escapeHtml(r.area || "Cuttack") + '</span></td>' +
               '<td><span class="stage-badge ' + escapeHtml(r.stage) + '">' + escapeHtml(r.stage) + '</span></td>' +
-              '<td style="font-weight:700;">' + escapeHtml(r.followUpDate || "None") + '</td>' +
+              '<td>' + escapeHtml(r.followUpDate || "None") + '</td>' +
               '<td><button type="button" class="text-btn" data-action="edit" data-id="' + r.id + '">Edit</button></td>' +
             '</tr>';
           }).join("");
-          container.innerHTML = '<div class="table-wrap"><table><thead><tr><th>Customer &amp; Area</th><th>Stage</th><th>Follow-Up</th><th>Action</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
-          return;
-        }
-
-        if (currentView === "pipeline") {
-          var stages = ["Hot", "Warm", "Cold", "Converted", "Lost"];
-          var html = "";
-          stages.forEach(function(st) {
-            var group = filtered.filter(function(r) { return r.stage === st; });
-            if (group.length > 0) {
-              html += '<div class="pipeline-group">' +
-                '<div class="pipeline-header"><span>' + st + ' Leads</span><span>' + group.length + '</span></div>' +
-                group.map(function(r) { return buildCardHtml(r, today); }).join("") +
-              '</div>';
-            }
-          });
-          container.innerHTML = html;
+          container.innerHTML = '<div class="table-wrap"><table><thead><tr><th>Customer</th><th>Stage</th><th>Follow-Up</th><th>Action</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
           return;
         }
 
         container.innerHTML = filtered.map(function(r) {
-          return buildCardHtml(r, today);
+          var isDue = r.followUpDate === today;
+          var isOver = r.followUpDate && r.followUpDate < today && r.stage !== "Converted" && r.stage !== "Lost";
+          var cls = "lead-card" + (isDue ? " due" : "") + (isOver ? " overdue" : "");
+          var cleanPhone = (r.phone || "").replace(/[^0-9]/g, "");
+
+          var phoneBtns = cleanPhone ? (
+            '<a href="tel:' + cleanPhone + '" class="action-btn">📞 Call</a>' +
+            '<a href="https://wa.me/91' + cleanPhone + '?text=' + encodeURIComponent("Hello " + r.customerName + ", following up from Maheswari Stones & Ceramics regarding: " + r.requirement) + '" target="_blank" class="action-btn wa">💬 WhatsApp</a>'
+          ) : "";
+
+          var touchHtml = r.lastTouchDate ? (
+            '<div class="touch-box"><strong>Last Call (' + escapeHtml(r.lastTouchDate) + '):</strong> ' + escapeHtml(r.lastTouchNote) + '</div>'
+          ) : "";
+
+          return '<div class="' + cls + '">' +
+            '<div class="lead-top">' +
+              '<div>' +
+                '<div class="lead-name">' + escapeHtml(r.customerName) + '</div>' +
+                '<div class="lead-meta">📍 ' + escapeHtml(r.area || "Cuttack") + ' • Rep: <strong>' + escapeHtml(r.salesPerson) + '</strong></div>' +
+              '</div>' +
+              '<span class="stage-badge ' + escapeHtml(r.stage) + '">' + escapeHtml(r.stage) + '</span>' +
+            '</div>' +
+            '<div class="req-box">' + escapeHtml(r.requirement) + '</div>' +
+            touchHtml +
+            '<div class="lead-meta">⏰ Follow-up: <strong>' + escapeHtml(r.followUpDate || "Not set") + (r.followUpDate && r.followUpTime ? (' @ ' + escapeHtml(r.followUpTime)) : '') + '</strong> • Priority: ' + escapeHtml(r.priority) + '</div>' +
+            '<div class="lead-actions">' +
+              '<button type="button" class="action-btn primary" data-action="touch" data-id="' + r.id + '">📞 Log Follow-up Call</button>' +
+              phoneBtns +
+            '</div>' +
+            '<div class="lead-footer">' +
+              '<button type="button" class="text-btn" data-action="edit" data-id="' + r.id + '">✏️ Edit</button>' +
+              '<button type="button" class="text-btn danger" data-action="del" data-id="' + r.id + '">🗑️ Delete</button>' +
+            '</div>' +
+          '</div>';
         }).join("");
       }
 
@@ -1683,7 +1399,6 @@
       }
 
       function openVisitorForm(id) {
-        syncDropdowns();
         document.getElementById("visitorForm").reset();
         document.getElementById("editId").value = "";
         document.getElementById("fVisitDate").value = todayStr();
@@ -1709,8 +1424,6 @@
           }
         }
         openModal("visitorModal");
-        var bodyEl = document.querySelector("#visitorModal .fullscreen-body");
-        if (bodyEl) bodyEl.scrollTop = 0;
       }
 
       function openTouchForm(id) {
@@ -1734,71 +1447,6 @@
           if (inp) inp.focus();
         }, 100);
       }
-
-      function openQuickAdd(type, source) {
-        document.getElementById("quickAddType").value = type;
-        document.getElementById("quickAddSource").value = source || "filter";
-        if (type === "rep") {
-          document.getElementById("quickAddTitle").textContent = "Add Sales Person";
-          document.getElementById("quickAddLabel").textContent = "Sales Person Name *";
-        } else {
-          document.getElementById("quickAddTitle").textContent = "Add Cuttack Area";
-          document.getElementById("quickAddLabel").textContent = "Area Name (Cuttack, Odisha) *";
-        }
-        document.getElementById("quickAddInput").value = "";
-        openModal("quickAddModal");
-        setTimeout(function() {
-          var inp = document.getElementById("quickAddInput");
-          if (inp) inp.focus();
-        }, 100);
-      }
-
-      // Swipe-Up at Bottom (and Pull-Down at Top) Touch Gesture to Refresh Data
-      var touchStartY = 0;
-      var touchStartScrollY = 0;
-      var isRefreshing = false;
-
-      document.addEventListener("touchstart", function(e) {
-        if (document.querySelector(".modal-backdrop.open")) return;
-        if (e.touches && e.touches.length === 1) {
-          touchStartY = e.touches[0].clientY;
-          touchStartScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-        }
-      }, { passive: true });
-
-      document.addEventListener("touchmove", function(e) {
-        if (isRefreshing || document.querySelector(".modal-backdrop.open")) return;
-        if (!e.touches || e.touches.length !== 1) return;
-        var currentY = e.touches[0].clientY;
-        var deltaY = currentY - touchStartY;
-        var atBottom = (window.innerHeight + (window.scrollY || 0)) >= (document.documentElement.scrollHeight - 25);
-        var atTop = (window.scrollY || 0) <= 5;
-
-        // Swipe up gesture when at bottom of list
-        if (atBottom && deltaY < -55) {
-          showRefreshToast("↑ Release to sync cloud data...");
-        } else if (atTop && touchStartScrollY <= 5 && deltaY > 65) {
-          showRefreshToast("↓ Release to sync cloud data...");
-        }
-      }, { passive: true });
-
-      document.addEventListener("touchend", function(e) {
-        if (isRefreshing || document.querySelector(".modal-backdrop.open")) return;
-        if (!e.changedTouches || e.changedTouches.length !== 1) return;
-        var endY = e.changedTouches[0].clientY;
-        var deltaY = endY - touchStartY;
-        var atBottom = (window.innerHeight + (window.scrollY || 0)) >= (document.documentElement.scrollHeight - 25);
-        var atTop = (window.scrollY || 0) <= 5;
-
-        if ((atBottom && deltaY < -75) || (atTop && touchStartScrollY <= 5 && deltaY > 85)) {
-          isRefreshing = true;
-          fetchRecords(true).finally(function() {
-            isRefreshing = false;
-          });
-        } else {
-          hideRefreshToast(150);
-        }
-      }, { passive: true });
 
       document.addEventListener("click", function(e) {
         var target = e.target;
@@ -1841,7 +1489,7 @@
           closeModal(closeBtn.getAttribute("data-close"));
           return;
         }
-        if (target.classList && target.classList.contains("modal-backdrop") && !target.classList.contains("fullscreen-modal")) {
+        if (target.classList && target.classList.contains("modal-backdrop")) {
           target.classList.remove("open");
           return;
         }
@@ -1891,24 +1539,24 @@
           document.getElementById("filterReminder").value = "";
           document.getElementById("filterStage").value = "";
           document.getElementById("filterPriority").value = "";
-          fetchRecords(true);
+          render();
           return;
         }
 
         if (target.closest("#btnAddRep")) {
-          openQuickAdd("rep", "filter");
-          return;
-        }
-        if (target.closest("#btnAddRepForm")) {
-          openQuickAdd("rep", "form");
+          document.getElementById("quickAddType").value = "rep";
+          document.getElementById("quickAddTitle").textContent = "Add Sales Person";
+          document.getElementById("quickAddLabel").textContent = "Sales Person Name *";
+          document.getElementById("quickAddInput").value = "";
+          openModal("quickAddModal");
           return;
         }
         if (target.closest("#btnAddArea")) {
-          openQuickAdd("area", "filter");
-          return;
-        }
-        if (target.closest("#btnAddAreaForm")) {
-          openQuickAdd("area", "form");
+          document.getElementById("quickAddType").value = "area";
+          document.getElementById("quickAddTitle").textContent = "Add Cuttack Area";
+          document.getElementById("quickAddLabel").textContent = "Area Name (Cuttack, Odisha) *";
+          document.getElementById("quickAddInput").value = "";
+          openModal("quickAddModal");
           return;
         }
 
@@ -1983,27 +1631,18 @@
       document.getElementById("quickAddForm").addEventListener("submit", function(e) {
         e.preventDefault();
         var type = document.getElementById("quickAddType").value;
-        var source = document.getElementById("quickAddSource").value;
         var val = document.getElementById("quickAddInput").value.trim();
         if (!val) return;
         if (type === "rep") {
           if (customReps.indexOf(val) === -1) customReps.push(val);
           store.set("lf_reps", JSON.stringify(customReps));
           syncDropdowns();
-          if (source === "form") {
-            document.getElementById("fSalesPerson").value = val;
-          } else {
-            document.getElementById("filterRep").value = val;
-          }
+          document.getElementById("filterRep").value = val;
         } else {
           if (customAreas.indexOf(val) === -1) customAreas.push(val);
           store.set("lf_cuttack_areas", JSON.stringify(customAreas));
           syncDropdowns();
-          if (source === "form") {
-            document.getElementById("fArea").value = val;
-          } else {
-            document.getElementById("filterArea").value = val;
-          }
+          document.getElementById("filterArea").value = val;
         }
         closeModal("quickAddModal");
         render();
@@ -2128,12 +1767,12 @@
         store.set("lf_sb_url", document.getElementById("dbUrl").value.trim());
         store.set("lf_sb_key", document.getElementById("dbKey").value.trim());
         closeModal("dbModal");
-        fetchRecords(true);
+        fetchRecords();
       });
 
       syncDropdowns();
       render();
-      fetchRecords(false);
+      fetchRecords();
     })();
   </script>
 </body>
