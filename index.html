@@ -21,7 +21,34 @@
       color: #0f172a;
       font-size: 15px;
       line-height: 1.45;
-      padding-bottom: 50px;
+      padding-bottom: 65px;
+    }
+
+    /* Pull/Swipe Refresh Indicator */
+    .refresh-indicator {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      bottom: 24px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.35);
+      z-index: 9990;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .refresh-indicator.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
     /* Top Header */
@@ -466,6 +493,12 @@
       color: #334155;
     }
 
+    .swipe-hint {
+      font-size: 11px;
+      font-weight: 600;
+      color: #64748b;
+    }
+
     /* Enlarged Filter Results: Lead Cards & Table */
     .records-area {
       display: flex;
@@ -732,7 +765,7 @@
     }
 
     .fullscreen-body {
-      padding: 18px 16px 40px 16px;
+      padding: 18px 16px 45px 16px;
       flex: 1;
       overflow-y: auto;
       background: #f8fafc;
@@ -743,6 +776,9 @@
     }
 
     .fullscreen-body .field label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 13px;
       font-weight: 800;
       color: #1e293b;
@@ -871,6 +907,9 @@
   </style>
 </head>
 <body>
+
+  <!-- Swipe-Up / Pull Refresh Pill Indicator -->
+  <div id="refreshIndicator" class="refresh-indicator">🔄 Syncing Cloud Data...</div>
 
   <!-- Header -->
   <header class="header-bar">
@@ -1028,6 +1067,7 @@
     <!-- Results Count Bar -->
     <div class="results-header">
       <span id="resultsCountLabel">Showing 0 Records</span>
+      <span class="swipe-hint">↑ Swipe up at bottom to sync</span>
     </div>
 
     <!-- Output Container -->
@@ -1050,9 +1090,13 @@
               <input type="date" id="fVisitDate" required />
             </div>
             <div class="field">
-              <label>Sales Person *</label>
-              <input type="text" id="fSalesPerson" list="repDatalist" required placeholder="Enter Sales Person Name" />
-              <datalist id="repDatalist"></datalist>
+              <label>
+                <span>Sales Person *</span>
+                <button type="button" id="btnAddRepForm" class="add-link" style="font-size:12px;">+ Add New</button>
+              </label>
+              <select id="fSalesPerson" required>
+                <option value="">Select Sales Person</option>
+              </select>
             </div>
           </div>
 
@@ -1069,7 +1113,10 @@
 
           <div class="row-2">
             <div class="field">
-              <label>Cuttack Area *</label>
+              <label>
+                <span>Cuttack Area *</span>
+                <button type="button" id="btnAddAreaForm" class="add-link" style="font-size:12px;">+ Add Area</button>
+              </label>
               <select id="fArea" required>
                 <option value="">Select Area (Cuttack)</option>
               </select>
@@ -1216,6 +1263,7 @@
       </div>
       <form id="quickAddForm">
         <input type="hidden" id="quickAddType" />
+        <input type="hidden" id="quickAddSource" />
         <div class="field">
           <label id="quickAddLabel">Name *</label>
           <input type="text" id="quickAddInput" required placeholder="Enter name..." style="font-size:16px;" />
@@ -1227,7 +1275,7 @@
 
   <script>
     (function() {
-      var DEFAULT_URL = "https://adsczhoqmnxvjxgbqvq.supabase.co";
+      var DEFAULT_URL = "https://adsczhoqjmnxvjxgbqvq.supabase.co";
       var DEFAULT_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkc2N6aG9xam1ueHZqeGdicXZxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMyNTMyNzUsImV4cCI6MjEwODgyOTI3NX0.DhEJ1tV1O2EJCHt0EL8402CwNRq1UXUkHnqITh4xDkM";
       var DELETE_PIN = "3431";
 
@@ -1256,7 +1304,7 @@
       ];
 
       var records = [];
-      var customReps = ["Vinit Mantry", "Punit Mantry"];
+      var customReps = ["Vinit Mantry", "Punit Mantry", "Lipu"];
       var customAreas = CUTTACK_AREAS.slice();
       var currentView = "cards";
       var isCloudConnected = false;
@@ -1284,7 +1332,14 @@
         if (aSaved) customAreas = JSON.parse(aSaved);
       } catch (e) {}
 
-      function getUrl() { return store.get("lf_sb_url", DEFAULT_URL); }
+      function getUrl() {
+        var saved = store.get("lf_sb_url", DEFAULT_URL);
+        if (saved && saved.indexOf("adsczhoqmnxv") !== -1) {
+          saved = DEFAULT_URL;
+          store.set("lf_sb_url", DEFAULT_URL);
+        }
+        return saved;
+      }
       function getKey() { return store.get("lf_sb_key", DEFAULT_KEY); }
       function todayStr() { return new Date().toISOString().split("T")[0]; }
 
@@ -1296,6 +1351,21 @@
       function closeModal(id) {
         var el = document.getElementById(id);
         if (el) el.classList.remove("open");
+      }
+
+      function showRefreshToast(text) {
+        var ind = document.getElementById("refreshIndicator");
+        if (!ind) return;
+        ind.textContent = text;
+        ind.classList.add("visible");
+      }
+
+      function hideRefreshToast(delay) {
+        var ind = document.getElementById("refreshIndicator");
+        if (!ind) return;
+        setTimeout(function() {
+          ind.classList.remove("visible");
+        }, delay || 900);
       }
 
       function playChime() {
@@ -1318,18 +1388,23 @@
       function syncDropdowns() {
         var repMap = {};
         var areaMap = {};
-        customReps.forEach(function(x) { if (x) repMap[x] = true; });
-        customAreas.forEach(function(x) { if (x) areaMap[x] = true; });
+        customReps.forEach(function(x) { if (x) repMap[x.trim()] = true; });
+        customAreas.forEach(function(x) { if (x) areaMap[x.trim()] = true; });
         records.forEach(function(r) {
-          if (r.salesPerson) repMap[r.salesPerson] = true;
+          if (r.salesPerson) repMap[r.salesPerson.trim()] = true;
         });
 
         var repKeys = Object.keys(repMap);
+
+        // 1. Filter Sales Person Dropdown
         var filterRep = document.getElementById("filterRep");
         var curRep = filterRep.value;
         filterRep.innerHTML = '<option value="">All Sales Persons (' + repKeys.length + ')</option>';
-        var repList = document.getElementById("repDatalist");
-        repList.innerHTML = "";
+
+        // 2. Visitor Entry Form Sales Person Dropdown
+        var formRep = document.getElementById("fSalesPerson");
+        var curFormRep = formRep.value;
+        formRep.innerHTML = '<option value="">Select Sales Person</option>';
 
         repKeys.forEach(function(rep) {
           var opt = document.createElement("option");
@@ -1337,12 +1412,15 @@
           opt.textContent = rep;
           filterRep.appendChild(opt);
 
-          var dOpt = document.createElement("option");
-          dOpt.value = rep;
-          repList.appendChild(dOpt);
+          var fOpt = document.createElement("option");
+          fOpt.value = rep;
+          fOpt.textContent = rep;
+          formRep.appendChild(fOpt);
         });
         filterRep.value = curRep;
+        formRep.value = curFormRep;
 
+        // 3. Filter Area Dropdown & Form Area Dropdown
         var areaKeys = Object.keys(areaMap);
         var filterArea = document.getElementById("filterArea");
         var curArea = filterArea.value;
@@ -1367,8 +1445,11 @@
         formArea.value = curFormArea;
       }
 
-      async function fetchRecords() {
+      async function fetchRecords(isGestureRefresh) {
         var dot = document.getElementById("syncDot");
+        if (isGestureRefresh) {
+          showRefreshToast("🔄 Syncing latest records...");
+        }
         try {
           var res = await fetch(getUrl() + "/rest/v1/visitors?select=*&order=created_at.desc", {
             method: "GET",
@@ -1403,6 +1484,10 @@
             store.set("lf_records_cache", JSON.stringify(records));
             syncDropdowns();
             render();
+            if (isGestureRefresh) {
+              showRefreshToast("✅ Up to date (" + records.length + " records)");
+              hideRefreshToast(1200);
+            }
             return;
           }
         } catch (e) {}
@@ -1416,6 +1501,10 @@
         }
         syncDropdowns();
         render();
+        if (isGestureRefresh) {
+          showRefreshToast("⚠️ Offline — Loaded local cache");
+          hideRefreshToast(1400);
+        }
       }
 
       function buildCardHtml(r, today) {
@@ -1594,6 +1683,7 @@
       }
 
       function openVisitorForm(id) {
+        syncDropdowns();
         document.getElementById("visitorForm").reset();
         document.getElementById("editId").value = "";
         document.getElementById("fVisitDate").value = todayStr();
@@ -1644,6 +1734,71 @@
           if (inp) inp.focus();
         }, 100);
       }
+
+      function openQuickAdd(type, source) {
+        document.getElementById("quickAddType").value = type;
+        document.getElementById("quickAddSource").value = source || "filter";
+        if (type === "rep") {
+          document.getElementById("quickAddTitle").textContent = "Add Sales Person";
+          document.getElementById("quickAddLabel").textContent = "Sales Person Name *";
+        } else {
+          document.getElementById("quickAddTitle").textContent = "Add Cuttack Area";
+          document.getElementById("quickAddLabel").textContent = "Area Name (Cuttack, Odisha) *";
+        }
+        document.getElementById("quickAddInput").value = "";
+        openModal("quickAddModal");
+        setTimeout(function() {
+          var inp = document.getElementById("quickAddInput");
+          if (inp) inp.focus();
+        }, 100);
+      }
+
+      // Swipe-Up at Bottom (and Pull-Down at Top) Touch Gesture to Refresh Data
+      var touchStartY = 0;
+      var touchStartScrollY = 0;
+      var isRefreshing = false;
+
+      document.addEventListener("touchstart", function(e) {
+        if (document.querySelector(".modal-backdrop.open")) return;
+        if (e.touches && e.touches.length === 1) {
+          touchStartY = e.touches[0].clientY;
+          touchStartScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+        }
+      }, { passive: true });
+
+      document.addEventListener("touchmove", function(e) {
+        if (isRefreshing || document.querySelector(".modal-backdrop.open")) return;
+        if (!e.touches || e.touches.length !== 1) return;
+        var currentY = e.touches[0].clientY;
+        var deltaY = currentY - touchStartY;
+        var atBottom = (window.innerHeight + (window.scrollY || 0)) >= (document.documentElement.scrollHeight - 25);
+        var atTop = (window.scrollY || 0) <= 5;
+
+        // Swipe up gesture when at bottom of list
+        if (atBottom && deltaY < -55) {
+          showRefreshToast("↑ Release to sync cloud data...");
+        } else if (atTop && touchStartScrollY <= 5 && deltaY > 65) {
+          showRefreshToast("↓ Release to sync cloud data...");
+        }
+      }, { passive: true });
+
+      document.addEventListener("touchend", function(e) {
+        if (isRefreshing || document.querySelector(".modal-backdrop.open")) return;
+        if (!e.changedTouches || e.changedTouches.length !== 1) return;
+        var endY = e.changedTouches[0].clientY;
+        var deltaY = endY - touchStartY;
+        var atBottom = (window.innerHeight + (window.scrollY || 0)) >= (document.documentElement.scrollHeight - 25);
+        var atTop = (window.scrollY || 0) <= 5;
+
+        if ((atBottom && deltaY < -75) || (atTop && touchStartScrollY <= 5 && deltaY > 85)) {
+          isRefreshing = true;
+          fetchRecords(true).finally(function() {
+            isRefreshing = false;
+          });
+        } else {
+          hideRefreshToast(150);
+        }
+      }, { passive: true });
 
       document.addEventListener("click", function(e) {
         var target = e.target;
@@ -1736,24 +1891,24 @@
           document.getElementById("filterReminder").value = "";
           document.getElementById("filterStage").value = "";
           document.getElementById("filterPriority").value = "";
-          render();
+          fetchRecords(true);
           return;
         }
 
         if (target.closest("#btnAddRep")) {
-          document.getElementById("quickAddType").value = "rep";
-          document.getElementById("quickAddTitle").textContent = "Add Sales Person";
-          document.getElementById("quickAddLabel").textContent = "Sales Person Name *";
-          document.getElementById("quickAddInput").value = "";
-          openModal("quickAddModal");
+          openQuickAdd("rep", "filter");
+          return;
+        }
+        if (target.closest("#btnAddRepForm")) {
+          openQuickAdd("rep", "form");
           return;
         }
         if (target.closest("#btnAddArea")) {
-          document.getElementById("quickAddType").value = "area";
-          document.getElementById("quickAddTitle").textContent = "Add Cuttack Area";
-          document.getElementById("quickAddLabel").textContent = "Area Name (Cuttack, Odisha) *";
-          document.getElementById("quickAddInput").value = "";
-          openModal("quickAddModal");
+          openQuickAdd("area", "filter");
+          return;
+        }
+        if (target.closest("#btnAddAreaForm")) {
+          openQuickAdd("area", "form");
           return;
         }
 
@@ -1828,18 +1983,27 @@
       document.getElementById("quickAddForm").addEventListener("submit", function(e) {
         e.preventDefault();
         var type = document.getElementById("quickAddType").value;
+        var source = document.getElementById("quickAddSource").value;
         var val = document.getElementById("quickAddInput").value.trim();
         if (!val) return;
         if (type === "rep") {
           if (customReps.indexOf(val) === -1) customReps.push(val);
           store.set("lf_reps", JSON.stringify(customReps));
           syncDropdowns();
-          document.getElementById("filterRep").value = val;
+          if (source === "form") {
+            document.getElementById("fSalesPerson").value = val;
+          } else {
+            document.getElementById("filterRep").value = val;
+          }
         } else {
           if (customAreas.indexOf(val) === -1) customAreas.push(val);
           store.set("lf_cuttack_areas", JSON.stringify(customAreas));
           syncDropdowns();
-          document.getElementById("filterArea").value = val;
+          if (source === "form") {
+            document.getElementById("fArea").value = val;
+          } else {
+            document.getElementById("filterArea").value = val;
+          }
         }
         closeModal("quickAddModal");
         render();
@@ -1964,12 +2128,12 @@
         store.set("lf_sb_url", document.getElementById("dbUrl").value.trim());
         store.set("lf_sb_key", document.getElementById("dbKey").value.trim());
         closeModal("dbModal");
-        fetchRecords();
+        fetchRecords(true);
       });
 
       syncDropdowns();
       render();
-      fetchRecords();
+      fetchRecords(false);
     })();
   </script>
 </body>
